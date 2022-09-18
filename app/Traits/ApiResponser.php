@@ -14,12 +14,12 @@ trait ApiResponser
 	/**
      * Return a success JSON response.
      *
-     * @param array|string $data The data to return.
+     * @param array|string|null $data The data to return.
      * @param string $message The message about the response.
      * @param int $code The HTTP status code.
      * @return \Illuminate\Http\JsonResponse The response.
      */
-	protected function success($data, string $message = 'OK', int $code = 200)
+	protected function success($data = null, string $message = 'OK', int $code = 200)
 	{
 		return response()->json([
 			'status' => 'success',
