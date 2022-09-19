@@ -24,7 +24,7 @@ class Album extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        //
+        'year' => 'integer',
     ];
 
     /**
