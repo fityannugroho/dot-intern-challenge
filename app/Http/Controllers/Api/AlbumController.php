@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\SearchAlbumsRequest;
 use App\Models\Album;
 use App\Http\Requests\StoreAlbumRequest;
 use App\Http\Requests\UpdateAlbumRequest;
@@ -15,11 +16,16 @@ class AlbumController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param \App\Http\Requests\SearchAlbumsRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(SearchAlbumsRequest $request)
     {
-        $albums = Album::all();
+        $validated = $request->validated();
+        $albumName = $validated['name'] ?? null;
+        $albums = ($albumName)
+            ? Album::where('name', 'like', "%$albumName%")->get()
+            : Album::all();
 
         return $this->success($albums);
     }
