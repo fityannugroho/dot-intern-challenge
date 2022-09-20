@@ -19,3 +19,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::apiResource('albums', 'App\Http\Controllers\Api\AlbumController');
+
+Route::apiResource('songs', 'App\Http\Controllers\Api\SongController');
