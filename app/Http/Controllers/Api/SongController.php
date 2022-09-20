@@ -22,7 +22,7 @@ class SongController extends Controller
     public function index(SearchSongsRequest $request)
     {
         $validated = $request->validated();
-        $songTitle = $validated['title'];
+        $songTitle = $validated['title'] ?? null;
         $songs = $songTitle
             ? Song::where('title', 'like', "%$songTitle%")->get()
             : Song::all();
