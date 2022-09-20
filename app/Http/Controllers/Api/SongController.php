@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\SearchSongsRequest;
 use App\Models\Song;
 use App\Http\Requests\StoreSongRequest;
 use App\Http\Requests\UpdateSongRequest;
@@ -15,11 +16,16 @@ class SongController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param \App\Http\Requests\SearchSongsRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(SearchSongsRequest $request)
     {
-        $songs = Song::all();
+        $validated = $request->validated();
+        $songTitle = $validated['title'];
+        $songs = $songTitle
+            ? Song::where('title', 'like', "%$songTitle%")->get()
+            : Song::all();
 
         return $this->success($songs);
     }
