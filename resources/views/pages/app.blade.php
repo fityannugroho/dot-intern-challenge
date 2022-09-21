@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
-@include('components.page-head')
+<x-page-head :title='$title ?? null' />
 
 <body>
     <main>
