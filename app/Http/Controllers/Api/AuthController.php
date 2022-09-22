@@ -58,7 +58,7 @@ class AuthController extends Controller
      */
     public function logout()
     {
-        if ($this->authService->logout()) {
+        if ($this->authService->revokeAccessToken()) {
             return $this->success(null, 'Logout successful', 200);
         }
 

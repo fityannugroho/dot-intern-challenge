@@ -31,7 +31,7 @@ class AuthService
      */
     public function createAccessToken(): string
     {
-        $user = User::find(auth()->user()->id);
+        $user = User::find(auth()->id());
 
         if (empty($user)) {
             return '';
@@ -41,13 +41,18 @@ class AuthService
     }
 
     /**
-     * Logout the current authenticated user.
+     * Revoke the access token of the logged in user.
      *
-     * @return bool true if logout successful, false otherwise.
+     * @return bool true if the token is revoked, false otherwise.
      */
-    public function logout(): bool
+    public function revokeAccessToken(): bool
     {
-        $user = User::find(auth()->user()->id);
+        $user = User::find(auth()->id());
+
+        if (empty($user)) {
+            return false;
+        }
+
         return $user->tokens()->delete();
     }
 }
