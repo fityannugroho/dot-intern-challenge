@@ -7,5 +7,8 @@
     <main>
         @yield('content')
     </main>
+
+    @yield('page-scripts')
 </body>
+
 </html>

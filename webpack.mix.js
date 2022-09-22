@@ -16,11 +16,19 @@ mix.js('resources/js/app.js', 'public/js');
 mix.sass('resources/sass/app.scss', 'public/css');
 mix.sourceMaps();
 
+// Compile js files for individual pages
+mix.js('resources/js/pages/*', 'public/js/pages');
+
 // Copy all assets to public folder
 mix.copyDirectory('resources/assets', 'public/assets');
 
 // Split the js files into manifest.js, vendor.js and app.js.
-mix.extract();
+mix.extract({
+    to: 'js/vendor.js',
+});
+mix.options({
+    runtimeChunkPath: 'js',
+});
 
 // === Mix configuration for development environment ===
 if (!mix.inProduction()) {
