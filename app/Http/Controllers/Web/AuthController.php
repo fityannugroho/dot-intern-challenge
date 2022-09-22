@@ -4,10 +4,26 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
-use Illuminate\Http\Request;
+use App\Http\Services\AuthService;
 
 class AuthController extends Controller
 {
+    /**
+     * The auth service instance.
+     */
+    protected $authService = null;
+
+    /**
+     * Create a new controller instance.
+     *
+     * @param AuthService $authService The auth service instance.
+     * @return void
+     */
+    public function __construct(AuthService $authService)
+    {
+        $this->authService = $authService;
+    }
+
     /**
      * Login page
      *
@@ -15,6 +31,11 @@ class AuthController extends Controller
      */
     public function login()
     {
+        // If the user is already logged in, redirect to the dashboard page.
+        if (auth()->check()) {
+            return redirect()->route('dashboard');
+        }
+
         $data['title'] = 'Login';
         return view('pages.login', $data);
     }
@@ -27,16 +48,10 @@ class AuthController extends Controller
      */
     public function loginAction(LoginRequest $request)
     {
-        $validated = $request->validated();
-        $credentials = [
-            'email' => $validated['email'],
-            'password' => $validated['password'],
-        ];
-
-        if (auth()->attempt($credentials)) {
-            return redirect()->intended('dashboard');
+        if (!$this->authService->login($request)) {
+            return redirect()->back()->with('error', 'Invalid email or password');
         }
 
-        return redirect()->back()->with('error', 'Invalid credentials');
+        return redirect()->intended('dashboard');
     }
 }
