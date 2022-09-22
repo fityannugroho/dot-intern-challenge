@@ -54,4 +54,17 @@ class AuthController extends Controller
 
         return redirect()->intended('dashboard');
     }
+
+    /**
+     * Logout from the application.
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function logout()
+    {
+        session()->flush();
+        auth()->logout();
+
+        return redirect()->route('home');
+    }
 }

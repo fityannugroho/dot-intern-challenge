@@ -15,11 +15,16 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return redirect()->route('login');
-});
+    return auth()->check()
+        ? redirect()->route('dashboard')
+        : redirect()->route('login');
+})->name('home');
 
 Route::get('/login', [AuthController::class, 'login'])
     ->name('login');
 
 Route::post('/login', [AuthController::class, 'loginAction'])
     ->name('auth.login');
+
+Route::get('/logout', [AuthController::class, 'logout'])
+    ->name('logout');
