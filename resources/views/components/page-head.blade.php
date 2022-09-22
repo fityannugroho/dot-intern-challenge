@@ -8,9 +8,11 @@
     <title>{{ $title }}</title>
 
     {{-- Scripts --}}
-    {{-- Put the scripts here --}}
+    <script src="{{ mix('js/manifest.js') }}" defer></script>
+    <script src="{{ mix('js/vendor.js') }}" defer></script>
+    <script src="{{ mix('js/app.js') }}" defer></script>
 
     {{-- Styles --}}
-    {{-- Put the styles here --}}
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
 </head>
