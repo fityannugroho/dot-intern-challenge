@@ -14,9 +14,8 @@
     <h1 class="mb-3">{{ $album->name }} ({{ $album->year }})</h1>
 
     <div class="d-flex gap-2 flex-wrap mb-4">
-        <a href="{{ route('songs.create', ['id' => $album]) }}" class="btn btn-primary">Add Song</a>
+        <a href="{{ route('songs.create', ['album' => $album]) }}" class="btn btn-primary">Add Song</a>
         <a href="{{ route('albums.edit', $album) }}" class="btn btn-outline-secondary">Edit</a>
-        {{-- Trigger modal --}}
         <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
             Delete
         </button>
