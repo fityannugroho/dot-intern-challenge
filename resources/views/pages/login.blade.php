@@ -3,14 +3,14 @@
 @section('content')
 
 <x-wrapper>
-    @if (session('error'))
-    <x-alert type="danger" message="{{ session('error') }}" />
-    @endif
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">{{ __('Login') }}</div>
                 <div class="card-body">
+                    @if (session('error'))
+                    <x-alert type="danger" message="{{ session('error') }}" />
+                    @endif
                     <form method="POST" action="{{ route('auth.login') }}">
                         @csrf
                         <div class="form-outline mb-3">
