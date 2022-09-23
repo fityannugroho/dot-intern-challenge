@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreAlbumRequest;
+use App\Http\Requests\UpdateAlbumRequest;
 use App\Models\Album;
 use Illuminate\Http\Request;
 
@@ -76,19 +77,28 @@ class AlbumController extends Controller
      */
     public function edit(Album $album)
     {
-        //
+        $data['title'] = 'Edit Album';
+        $data['album'] = $album;
+
+        return view('pages.album.edit', $data);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Album  $album
+     * @param  UpdateAlbumRequest $request
+     * @param  \App\Models\Album $album
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Album $album)
+    public function update(UpdateAlbumRequest $request, Album $album)
     {
-        //
+        $validated = $request->validated();
+
+        if ($album->update($validated)) {
+            return redirect()->route('albums.show', $album)->with('success', 'Album updated successfully');
+        }
+
+        return redirect()->back()->with('error', 'Album updated failed');
     }
 
     /**
