@@ -3,6 +3,14 @@
 @section('content')
 
 <x-wrapper>
+    @if (session('error'))
+    <x-alert type="danger" message="{{ session('error') }}" />
+    @endif
+
+    @if (session('success'))
+    <x-alert type="success" message="{{ session('success') }}" />
+    @endif
+
     <div class="d-flex align-items-center justify-content-between mb-3">
         <h1 class="h2">Albums</h1>
         <a href="{{ route('albums.create') }}" class="btn btn-primary">Add</a>

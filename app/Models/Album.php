@@ -59,6 +59,11 @@ class Album extends Model
     protected static function boot()
     {
         parent::boot();
+
+        // Delete all songs when album deleted
+        static::deleting(function ($album) {
+            $album->songs->each->delete();
+        });
     }
 
     /**

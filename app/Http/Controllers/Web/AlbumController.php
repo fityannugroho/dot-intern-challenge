@@ -109,6 +109,10 @@ class AlbumController extends Controller
      */
     public function destroy(Album $album)
     {
-        //
+        if ($album->delete()) {
+            return redirect()->route('albums.index')->with('success', 'Album deleted successfully');
+        }
+
+        return redirect()->back()->with('error', 'Album deleted failed');
     }
 }
