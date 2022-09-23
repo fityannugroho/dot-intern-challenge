@@ -1,13 +1,23 @@
 @extends('pages.app')
 
 @section('content')
+
 <x-wrapper>
+    @if (session('success'))
+    <x-alert type="success" message="{{ session('success') }}" />
+    @endif
+
+    @if (session('error'))
+    <x-alert type="danger" message="{{ session('error') }}" />
+    @endif
+
     <div class="row">
         <div class="col-md-12">
             <div class="d-flex align-items-center justify-content-between mb-3">
                 <h1>Songs</h1>
                 <a href="{{ route('songs.create') }}" class="btn btn-primary">Add Song</a>
             </div>
+            @if ($songs->count())
             <table class="table table-striped">
                 <thead>
                     <tr>
@@ -41,6 +51,11 @@
                     @endforeach
                 </tbody>
             </table>
+            @else
+            <div class="p-3 border">
+                <p class="text-muted text-center">There are no songs</p>
+            </div>
+            @endif
         </div>
     </div>
 </x-wrapper>

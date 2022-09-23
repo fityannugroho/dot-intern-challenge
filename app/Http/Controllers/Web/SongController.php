@@ -84,6 +84,10 @@ class SongController extends Controller
      */
     public function destroy(Song $song)
     {
-        //
+        if ($song->delete()) {
+            return redirect()->route('songs.index')->with('success', 'Song deleted successfully');
+        }
+
+        return redirect()->route('songs.index')->with('error', 'Song deleted failed');
     }
 }
