@@ -4,6 +4,10 @@
 <x-page-head :title='$title ?? null' />
 
 <body>
+
+    <head>
+        <x-navbar />
+    </head>
     <main>
         @yield('content')
     </main>

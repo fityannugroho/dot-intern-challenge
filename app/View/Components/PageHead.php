@@ -23,7 +23,7 @@ class PageHead extends Component
      */
     public function __construct($title = '')
     {
-        $this->title = $title ?? config('app.name');
+        $this->title = $title . ' | ' . config('app.name') ?? config('app.name');
     }
 
     /**
