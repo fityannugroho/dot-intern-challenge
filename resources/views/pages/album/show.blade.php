@@ -37,7 +37,7 @@
                         <p class="mb-1">{{ $song->artist }}</p>
                     </div>
                     <div class="text-end">
-                        <p class="mb-1" title="Duration">{{ date('i:s', $song->duration) }}</p>
+                        <p class="mb-1" title="Duration">{{ $song->str_duration }}</p>
                     </div>
                 </a>
                 @endforeach

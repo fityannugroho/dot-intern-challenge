@@ -26,7 +26,7 @@
                 </tr>
                 <tr>
                     <th scope="row">Duration</th>
-                    <td>{{ $song->duration }}</td>
+                    <td>{{ $song->str_duration }}</td>
                 </tr>
                 <tr>
                     <th scope="row">Year</th>

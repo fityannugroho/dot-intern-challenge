@@ -76,7 +76,7 @@
                                         {{ $song->artist }}
                                     </td>
                                     <td>
-                                        {{ $song->duration }}
+                                        {{ $song->str_duration }}
                                     </td>
                                     <td>
                                         {{ $song->album_id }}

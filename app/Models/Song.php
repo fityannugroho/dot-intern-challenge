@@ -74,4 +74,19 @@ class Song extends Model
     {
         return $this->belongsTo(Album::class);
     }
+
+    /**
+     * Get the formatted string duration of the song.
+     *
+     * @return string
+     */
+    public function getStrDurationAttribute(): string
+    {
+        // Check if the duration more than 1 hour
+        if ($this->duration > 3600) {
+            return gmdate('H:i:s', $this->duration);
+        }
+
+        return gmdate('i:s', $this->duration);
+    }
 }
