@@ -35,3 +35,6 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
 
 Route::resource('albums', 'App\Http\Controllers\Web\AlbumController')
     ->middleware(['auth']);
+
+Route::resource('songs', 'App\Http\Controllers\Web\SongController')
+    ->middleware(['auth']);
