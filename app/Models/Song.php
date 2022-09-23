@@ -66,4 +66,12 @@ class Song extends Model
     {
         parent::boot();
     }
+
+    /**
+     * Get the album that owns the song.
+     */
+    public function album()
+    {
+        return $this->belongsTo(Album::class);
+    }
 }

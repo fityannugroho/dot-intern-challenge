@@ -60,4 +60,12 @@ class Album extends Model
     {
         parent::boot();
     }
+
+    /**
+     * Get the songs for the album.
+     */
+    public function songs()
+    {
+        return $this->hasMany(Song::class);
+    }
 }
