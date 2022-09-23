@@ -13,19 +13,18 @@
 
     <div class="d-flex align-items-center justify-content-between mb-3">
         <h1 class="h2">Albums</h1>
-        <a href="{{ route('albums.create') }}" class="btn btn-primary">Add</a>
+        <a href="{{ route('albums.create') }}" class="btn btn-primary">Add Album</a>
     </div>
     <div class="row">
         @if (count($albums))
         @foreach($albums as $album)
         <div class="col-md-4">
-            <div class="card mb-3">
+            <a class="card mb-3 text-body text-decoration-none shadow-sm" href="{{ route('albums.show', $album->id) }}">
                 <div class="card-body">
                     <h5 class="card-title">{{ $album->name }}</h5>
                     <p class="card-text text-muted">{{ $album->year }}</p>
-                    <a href="{{ route('albums.show', $album->id) }}" class="btn btn-primary">View Album</a>
                 </div>
-            </div>
+            </a>
         </div>
         @endforeach
         @else
