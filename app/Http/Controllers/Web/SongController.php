@@ -15,7 +15,10 @@ class SongController extends Controller
      */
     public function index()
     {
-        //
+        $songs = Song::with('album')->get();
+        $data['songs'] = $songs;
+
+        return view('pages.song.index', $data);
     }
 
     /**
