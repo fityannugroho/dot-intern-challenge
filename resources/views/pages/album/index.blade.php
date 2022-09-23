@@ -16,6 +16,7 @@
         <a href="{{ route('albums.create') }}" class="btn btn-primary">Add</a>
     </div>
     <div class="row">
+        @if (count($albums))
         @foreach($albums as $album)
         <div class="col-md-4">
             <div class="card mb-3">
@@ -27,6 +28,11 @@
             </div>
         </div>
         @endforeach
+        @else
+        <div class="p-3 border">
+            <p class="text-muted text-center">There are no albums</p>
+        </div>
+        @endif
     </div>
 </x-wrapper>
 

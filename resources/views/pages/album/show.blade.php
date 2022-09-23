@@ -13,7 +13,7 @@
 
     <h1 class="mb-3">{{ $album->name }} ({{ $album->year }})</h1>
 
-    <div class="d-flex gap-2 flex-wrap">
+    <div class="d-flex gap-2 flex-wrap mb-4">
         <a href="{{ route('songs.create', ['id' => $album]) }}" class="btn btn-primary">Add Song</a>
         <a href="{{ route('albums.edit', $album) }}" class="btn btn-outline-secondary">Edit</a>
         {{-- Trigger modal --}}
@@ -21,13 +21,16 @@
             Delete
         </button>
     </div>
-    <hr>
 
     {{-- Song List --}}
     <div class="row">
         <div class="col-12">
             <div class="list-group">
-                @foreach ($album->songs as $song)
+                @php
+                $songs = $album->songs;
+                @endphp
+                @if (count($songs))
+                @foreach ($songs as $song)
                 <a href="{{ route('songs.show', $song->id) }}"
                     class="list-group-item d-flex justify-content-between flex-wrap">
                     <div class="">
@@ -39,6 +42,11 @@
                     </div>
                 </a>
                 @endforeach
+                @else
+                <div class="p-3 border">
+                    <p class="text-muted text-center">There are no songs</p>
+                </div>
+                @endif
             </div>
         </div>
     </div>

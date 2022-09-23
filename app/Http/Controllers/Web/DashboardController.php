@@ -18,6 +18,8 @@ class DashboardController extends Controller
         $data['title'] = 'Dashboard';
         $data['albums'] = Album::paginate(10);
         $data['songs'] = Song::paginate(10);
+        $data['totalAlbums'] = Album::count();
+        $data['totalSongs'] = Song::count();
 
         return view('pages.dashboard', $data);
     }

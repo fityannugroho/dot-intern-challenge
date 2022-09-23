@@ -19,6 +19,7 @@
                                 <th>Year</th>
                             </thead>
                             <tbody>
+                                @if ($totalAlbums)
                                 @foreach ($albums as $album)
                                 <tr>
                                     <td>
@@ -29,6 +30,13 @@
                                     </td>
                                 </tr>
                                 @endforeach
+                                @else
+                                <tr>
+                                    <td colspan="2" class="text-center">
+                                        <p class="text-muted">There are no albums</p>
+                                    </td>
+                                </tr>
+                                @endif
                             </tbody>
                         </table>
                     </div>
@@ -52,6 +60,7 @@
                                 <th>Album</th>
                             </thead>
                             <tbody>
+                                @if ($totalSongs)
                                 @foreach ($songs as $song)
                                 <tr>
                                     <td>
@@ -74,6 +83,13 @@
                                     </td>
                                 </tr>
                                 @endforeach
+                                @else
+                                <tr>
+                                    <td colspan="6" class="text-center">
+                                        <p class="text-muted">There are no songs</p>
+                                    </td>
+                                </tr>
+                                @endif
                             </tbody>
                         </table>
                     </div>
