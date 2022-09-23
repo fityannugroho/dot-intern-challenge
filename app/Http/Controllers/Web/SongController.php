@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreSongRequest;
 use App\Models\Song;
 use Illuminate\Http\Request;
 
@@ -16,6 +17,8 @@ class SongController extends Controller
     public function index()
     {
         $songs = Song::with('album')->get();
+
+        $data['title'] = 'Songs';
         $data['songs'] = $songs;
 
         return view('pages.song.index', $data);
@@ -26,20 +29,31 @@ class SongController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        $data['title'] = 'Add New Song';
+        $data['albums'] = \App\Models\Album::all();
+        $data['albumId'] = $request->get('album');
+
+        return view('pages.song.create', $data);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param StoreSongRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreSongRequest $request)
     {
-        //
+        $validated = $request->validated();
+        $song = Song::create($validated);
+
+        if ($song) {
+            return redirect()->route('songs.show', $song);
+        }
+
+        return redirect()->route('songs.index')->with('error', 'Something went wrong');
     }
 
     /**

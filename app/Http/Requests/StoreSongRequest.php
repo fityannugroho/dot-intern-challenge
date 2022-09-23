@@ -25,11 +25,24 @@ class StoreSongRequest extends FormRequest
     {
         return [
             'title' => 'required|string|max:100',
-            'year' => 'required|integer|digits:4',
+            'year' => 'required|integer|digits:4|min:1901|max:' . date('Y'),
             'genre' => 'required|string|max:50',
             'artist' => 'required|string|max:100',
             'duration' => 'integer|min:0',
             'album_id' => 'integer|nullable|exists:albums,id',
         ];
+    }
+
+    // Prepare the data for validation.
+    protected function prepareForValidation()
+    {
+        // Convert the duration to seconds.
+        $duration = $this->get('duration');
+        $duration = explode(':', $duration);
+        $duration = $duration[0] * 60 + $duration[1];
+
+        $this->merge([
+            'duration' => $duration,
+        ]);
     }
 }
