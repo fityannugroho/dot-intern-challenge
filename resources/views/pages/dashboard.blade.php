@@ -80,7 +80,7 @@
                                             {{ $song->album->name }}
                                         </a>
                                         @else
-                                        <p class="text-muted">No album</p>
+                                        <span class="text-muted">No album</span>
                                         @endif
                                     </td>
                                 </tr>
