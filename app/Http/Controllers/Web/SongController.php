@@ -64,7 +64,10 @@ class SongController extends Controller
      */
     public function show(Song $song)
     {
-        //
+        $data['title'] = $song->title;
+        $data['song'] = $song;
+
+        return view('pages.song.show', $data);
     }
 
     /**
