@@ -25,7 +25,7 @@ class StoreAlbumRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:100',
-            'year' => 'required|integer|digits:4',
+            'year' => 'required|integer|digits:4|min:1900|max:' . date('Y'),
         ];
     }
 }
