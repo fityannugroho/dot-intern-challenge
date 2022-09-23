@@ -23,7 +23,9 @@
                                 @foreach ($albums as $album)
                                 <tr>
                                     <td>
-                                        {{ $album->name }}
+                                        <a href="{{ route('albums.show', $album->id) }}">
+                                            {{ $album->name }}
+                                        </a>
                                     </td>
                                     <td class="text-right">
                                         {{ $album->year }}
@@ -53,8 +55,6 @@
                         <table class="table">
                             <thead class=" text-primary">
                                 <th>Title</th>
-                                <th>Year</th>
-                                <th>Genre</th>
                                 <th>Artist</th>
                                 <th>Duration</th>
                                 <th>Album</th>
@@ -64,13 +64,9 @@
                                 @foreach ($songs as $song)
                                 <tr>
                                     <td>
-                                        {{ $song->title }}
-                                    </td>
-                                    <td class="text-right">
-                                        {{ $song->year }}
-                                    </td>
-                                    <td>
-                                        {{ $song->genre }}
+                                        <a href="{{ route('songs.show', $song->id) }}">
+                                            {{ $song->title }}
+                                        </a>
                                     </td>
                                     <td>
                                         {{ $song->artist }}
@@ -79,7 +75,13 @@
                                         {{ $song->str_duration }}
                                     </td>
                                     <td>
-                                        {{ $song->album_id }}
+                                        @if ($song->album)
+                                        <a href="{{ route('albums.show', $song->album->id) }}">
+                                            {{ $song->album->name }}
+                                        </a>
+                                        @else
+                                        <p class="text-muted">No album</p>
+                                        @endif
                                     </td>
                                 </tr>
                                 @endforeach
