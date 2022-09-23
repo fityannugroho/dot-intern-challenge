@@ -39,7 +39,9 @@ class StoreSongRequest extends FormRequest
         // Convert the duration to seconds.
         $duration = $this->get('duration');
         $duration = explode(':', $duration);
-        $duration = $duration[0] * 60 + $duration[1];
+        $duration = count($duration) > 2
+            ? $duration[0] * 60 * 60 + $duration[1] * 60 + $duration[2]
+            : $duration[0] * 60 + $duration[1];
 
         $this->merge([
             'duration' => $duration,

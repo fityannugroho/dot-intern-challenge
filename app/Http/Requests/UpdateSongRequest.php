@@ -25,11 +25,25 @@ class UpdateSongRequest extends FormRequest
     {
         return [
             'title' => 'string|max:100',
-            'year' => 'integer|digits:4',
+            'year' => 'required|integer|digits:4|min:1901|max:' . date('Y'),
             'genre' => 'string|max:50',
             'artist' => 'string|max:100',
             'duration' => 'integer|min:0',
             'album_id' => 'integer|nullable|exists:albums,id',
         ];
+    }
+
+    protected function prepareForValidation()
+    {
+        // Convert the duration to seconds.
+        $duration = $this->get('duration');
+        $duration = explode(':', $duration);
+        $duration = count($duration) > 2
+            ? $duration[0] * 60 * 60 + $duration[1] * 60 + $duration[2]
+            : $duration[0] * 60 + $duration[1];
+
+        $this->merge([
+            'duration' => $duration,
+        ]);
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreSongRequest;
+use App\Http\Requests\UpdateSongRequest;
 use App\Models\Song;
 use Illuminate\Http\Request;
 
@@ -78,19 +79,29 @@ class SongController extends Controller
      */
     public function edit(Song $song)
     {
-        //
+        $data['title'] = 'Edit Song';
+        $data['song'] = $song;
+        $data['albums'] = \App\Models\Album::all();
+
+        return view('pages.song.edit', $data);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Song  $song
+     * @param UpdateSongRequest $request
+     * @param \App\Models\Song $song
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Song $song)
+    public function update(UpdateSongRequest $request, Song $song)
     {
-        //
+        $validated = $request->validated();
+
+        if ($song->update($validated)) {
+            return redirect()->route('songs.show', $song);
+        }
+
+        return redirect()->route('songs.index')->with('error', 'Something went wrong');
     }
 
     /**
