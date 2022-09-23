@@ -62,7 +62,10 @@ class AlbumController extends Controller
      */
     public function show(Album $album)
     {
-        //
+        $data['title'] = $album->name;
+        $data['album'] = $album;
+
+        return view('pages.album.show', $data);
     }
 
     /**
