@@ -43,7 +43,7 @@ export default function timePickerInput({ id }) {
         const value = input.getAttribute('value');
 
         const hiddenInput = `
-            <input type="hidden" name="${input.getAttribute('id')}" value="${timeStringToSeconds(value) || 0}">
+            <input type="hidden" name="${input.getAttribute('id')}" value="${value || 0}">
         `;
 
         input.insertAdjacentHTML('beforebegin', hiddenInput);
