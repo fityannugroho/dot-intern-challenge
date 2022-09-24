@@ -1,4 +1,5 @@
 const mix = require('laravel-mix');
+const fs = require('fs');
 
 /*
  |--------------------------------------------------------------------------
@@ -17,7 +18,11 @@ mix.sass('resources/sass/app.scss', 'public/css');
 mix.sourceMaps();
 
 // Compile js files for individual pages
-mix.js('resources/js/pages/*', 'public/js/pages');
+fs.readdirSync('resources/js/pages')
+    .map((page) => __dirname + '/resources/js/pages/' + page)
+    .forEach((page) => {
+        mix.js(page, 'public/js/pages');
+    });
 
 // Copy all assets to public folder
 mix.copyDirectory('resources/assets', 'public/assets');
