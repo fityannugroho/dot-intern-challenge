@@ -19,3 +19,29 @@
 # API Documentation
 
 The API documentation is available at https://github.com/fityannugroho/dot-intern-challenge/wiki/API-Documentation.
+
+# Database Structure
+
+![Database Structure](/assets/erd.png)
+
+There are 2 main tables in this database:
+
+1. **`albums`** table contains the album data.
+   This table has 3 columns:
+   - `id` is the primary key and auto-incremented.
+   - `name` is the album name.
+   - `year` is the album release year.
+
+2. **`songs`** table contains the song data.
+   This table has 7 columns:
+    - `id` is the primary key and auto-incremented.
+    - `title` is the song title.
+    - `artist` is the song artist.
+    - `genre` is the song genre.
+    - `duration` is the song duration in seconds.
+    - `year` is the song release year.
+    - `album_id` is the foreign key to the `albums` table.
+
+The relationship between `albums` and `songs` table is one-to-many. One album can have many songs or no song at all, and one song can only have one album or no album at all.
+
+The other tables are the auto-generated tables by Laravel. They are used for authentication and authorization. The `users` table is used for storing the user data, and the `password_resets` table is used for storing the password reset token. The `failed_jobs` table is used for storing the failed jobs. The `migrations` table is used for storing the migration history.
