@@ -34,7 +34,7 @@
                 <span class="fw-bold text-danger">*</span>
             </label>
             <input type="text" id="artist" class="form-control @error('artist') is-invalid @enderror" name="artist"
-                value="{{ old('artist') }}" required autocomplete="artist" autofocus placeholder="Song artist" />
+                value="{{ old('artist') }}" required autocomplete="artist" placeholder="Song artist" />
 
             @error('artist')
             <span class="invalid-feedback" role="alert">
@@ -48,7 +48,7 @@
                 <span class="fw-bold text-danger">*</span>
             </label>
             <input type="text" id="genre" class="form-control @error('genre') is-invalid @enderror" name="genre"
-                value="{{ old('genre') }}" required autocomplete="genre" autofocus placeholder="Song genre" />
+                value="{{ old('genre') }}" required autocomplete="genre" placeholder="Song genre" />
 
             @error('genre')
             <span class="invalid-feedback" role="alert">
@@ -61,15 +61,20 @@
                 <span>{{ __('Duration') }}</span>
                 <span class="fw-bold text-danger">*</span>
             </label>
-            <input type="time" id="duration" class="form-control @error('duration') is-invalid @enderror"
-                name="duration" value="{{ old('duration') }}" required autocomplete="duration" autofocus
-                placeholder="Song duration" />
+            <input type="text" id="duration" class="form-control @error('duration') is-invalid @enderror"
+                value="{{ old('duration') }}" required autocomplete="duration" placeholder="Song duration" />
 
             @error('duration')
             <span class="invalid-feedback" role="alert">
                 <strong>{{ $message }}</strong>
             </span>
             @enderror
+
+            {{-- helper --}}
+            <div class="form-text">
+                <span class="text-muted">Input the duration with format <span class="fw-bold">hh:mm:ss</span>
+                    (hour:minute:second).</span>
+            </div>
         </div>
         <div class="form-outline mb-3">
             <label for="year" class="form-label">
@@ -77,7 +82,7 @@
                 <span class="fw-bold text-danger">*</span>
             </label>
             <input type="number" id="year" class="form-control @error('year') is-invalid @enderror" name="year"
-                value="{{ old('year') }}" required autocomplete="year" autofocus placeholder="Song year" />
+                value="{{ old('year') }}" required autocomplete="year" placeholder="Song year" />
 
             @error('year')
             <span class="invalid-feedback" role="alert">
@@ -109,5 +114,11 @@
     </form>
 
 </x-wrapper>
+
+@endsection
+
+@section('page-scripts')
+
+<script src="{{ mix('js/pages/song-create.js') }}" defer></script>
 
 @endsection

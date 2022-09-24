@@ -32,19 +32,4 @@ class StoreSongRequest extends FormRequest
             'album_id' => 'integer|nullable|exists:albums,id',
         ];
     }
-
-    // Prepare the data for validation.
-    protected function prepareForValidation()
-    {
-        // Convert the duration to seconds.
-        $duration = $this->get('duration');
-        $duration = explode(':', $duration);
-        $duration = count($duration) > 2
-            ? $duration[0] * 60 * 60 + $duration[1] * 60 + $duration[2]
-            : $duration[0] * 60 + $duration[1];
-
-        $this->merge([
-            'duration' => $duration,
-        ]);
-    }
 }
