@@ -53,6 +53,40 @@ The relationship between `albums` and `songs` table is one-to-many. One album ca
 
 The other tables are the auto-generated tables by Laravel. They are used for authentication and authorization. The `users` table is used for storing the user data, and the `password_resets` table is used for storing the password reset token. The `failed_jobs` table is used for storing the failed jobs. The `migrations` table is used for storing the migration history.
 
+# Screenshots
+
+## Login Page
+
+![Screenshot Login Page](/assets/screenshot-1-login.png)
+
+## Dashboard Page
+
+![Screenshot Dashboard Page](/assets/screenshot-2-dashboard.png)
+
+## Albums Page
+
+![Screenshot Albums Page](/assets/screenshot-3-albums.png)
+
+## Songs Page
+
+![Screenshot Songs Page](/assets/screenshot-4-songs.png)
+
+## Add Album Page
+
+![Screenshot Add Album Page](/assets/screenshot-5-add-album.png)
+
+## Detail Album Page
+
+![Screenshot Detail Album Page](/assets/screenshot-6-detail-album.png)
+
+## Detail Song Page
+
+![Screenshot Detail Song Page](/assets/screenshot-7-detail-song.png)
+
+## Edit Song Page
+
+![Screenshot Edit Song Page](/assets/screenshot-8-edit-song.png)
+
 # Dependencies
 
 - [Laravel](https://laravel.com/) v8.12.3
