@@ -1,3 +1,7 @@
+# Album of Songs Web API
+
+This project is a web app that allows users to create, read, update, and delete songs and albums. It also provides a RESTful API for the same functionality. The app is built using the [Laravel framework version 8](https://laravel.com/docs/8.x).
+
 # Installation
 
 1. Clone this repository.
