@@ -97,3 +97,13 @@ The other tables are the auto-generated tables by Laravel. They are used for aut
 - [Laravel Sanctum](https://laravel.com/docs/8.x/sanctum) v2.11
 - [Laravel Mix](https://laravel.com/docs/8.x/mix) v6.0.6
 - [Bootstrap](https://getbootstrap.com/) v5.2.1
+
+## Testing
+
+### Postman
+
+You can import the Postman collection from the `postman` directory to test the API.
+
+Import the [**`DOT Intern Challenge.postman_collection.json`**](/postman/DOT%20Intern%20Challenge.postman_collection.json) and [**`DOT Intern Challenge.postman_environment.json`**](/postman/DOT%20Intern%20Challenge.postman_environment.json) files to your Postman application (see [Importing and exporting data](https://learning.postman.com/docs/getting-started/importing-and-exporting-data/)).
+
+Finally, you can run the Postman collection to test the API (see [Running collections in Postman](https://learning.postman.com/docs/running-collections/intro-to-collection-runs/)).

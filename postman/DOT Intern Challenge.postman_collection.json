@@ -1,0 +1,4419 @@
+{
+	"info": {
+		"_postman_id": "8eb5f2c3-c30b-4cad-8f8e-ed40d721e33c",
+		"name": "DOT Intern Challenge",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "12397879"
+	},
+	"item": [
+		{
+			"name": "Authentications",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('response status code should have 201 value', () => {\r",
+									"    pm.response.to.have.status(201);\r",
+									"}); \r",
+									"    \r",
+									"pm.test('response Content-Type header should have application/json value', () => {\r",
+									"    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json');\r",
+									"}); \r",
+									"    \r",
+									"pm.test('response body should an object', () => {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson).to.be.an('object');\r",
+									"});\r",
+									"    \r",
+									"pm.test('response body should have correct property and value', () => {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseJson).to.ownProperty('status');\r",
+									"    pm.expect(responseJson.status).to.equals('success');\r",
+									"\r",
+									"    pm.expect(responseJson).to.ownProperty('status_code');\r",
+									"    pm.expect(responseJson.status_code).to.equals(201);\r",
+									"\r",
+									"    pm.expect(responseJson).to.ownProperty('message');\r",
+									"    pm.expect(responseJson.message).to.equals('Login successful');\r",
+									"\r",
+									"    pm.expect(responseJson).to.ownProperty('data');\r",
+									"    pm.expect(responseJson.data).to.be.an('object');\r",
+									"});\r",
+									"    \r",
+									"pm.test('response body data should have property with correct value', () => {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    const { data } = responseJson;\r",
+									"    \r",
+									"    pm.expect(data).to.have.ownProperty('access_token');\r",
+									"    pm.expect(data.access_token).to.not.equals('');\r",
+									"    pm.expect(data.access_token).to.not.equals(null);\r",
+									"\r",
+									"    pm.expect(data).to.have.ownProperty('token_type');\r",
+									"    pm.expect(data.token_type).to.equals('Bearer');\r",
+									"\r",
+									"    pm.expect(data).to.have.ownProperty('expires_at');\r",
+									"    pm.expect(data.expires_at).to.not.equals('');\r",
+									"    pm.expect(data.expires_at).to.not.equals(null);\r",
+									"    \r",
+									"    // Save accessToken in environment variable\r",
+									"    pm.environment.set('accessToken', data.access_token);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"{{testerEmail}}\",\r\n    \"password\": \"{{testerPassword}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login with Bad Payloads",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('response status code should have 400 value', () => {\r",
+									"    pm.response.to.have.status(400);\r",
+									"}); \r",
+									"    \r",
+									"pm.test('response Content-Type header should have application/json value', () => {\r",
+									"    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json');\r",
+									"}); \r",
+									"    \r",
+									"pm.test('response body should an object', () => {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson).to.be.an('object');\r",
+									"});\r",
+									"    \r",
+									"pm.test('response body should have correct property and value', () => {\r",
+									"    const responseJson = pm.response.json();\r",
+									"\r",
+									"    pm.expect(responseJson).to.ownProperty('status');\r",
+									"    pm.expect(responseJson.status).to.equals('fail');\r",
+									"\r",
+									"    pm.expect(responseJson).to.ownProperty('status_code');\r",
+									"    pm.expect(responseJson.status_code).to.equals(400);\r",
+									"\r",
+									"    pm.expect(responseJson).to.ownProperty('message');\r",
+									"    pm.expect(responseJson.message).to.be.an('array');\r",
+									"    pm.expect(responseJson.message).to.not.equals([]);\r",
+									"});\r",
+									"    \r",
+									"const repeatRequestUntilDatasetEmpty = () => {\r",
+									"    const badPayloads = pm.environment.get('badPayloads');\r",
+									"    \r",
+									"    if(badPayloads && badPayloads.length > 0) {\r",
+									"        postman.setNextRequest('Login with Bad Payloads');\r",
+									"    }\r",
+									"}\r",
+									"    \r",
+									"repeatRequestUntilDatasetEmpty();\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const email = pm.environment.get('testerEmail');\r",
+									"const password = pm.environment.get('testerPassword');\r",
+									"let badPayloads = pm.environment.get('badPayloads');\r",
+									"    \r",
+									"if (!badPayloads || badPayloads.length === 0) {\r",
+									"    badPayloads = [\r",
+									"        { password },\r",
+									"        { email: 1, password },\r",
+									"        { email },\r",
+									"        { email, password: true }\r",
+									"    ]\r",
+									"}\r",
+									"    \r",
+									"const currentBadPayload = badPayloads.shift();\r",
+									"pm.environment.set('currentBadPayload', JSON.stringify(currentBadPayload));\r",
+									"pm.environment.set('badPayloads', badPayloads);\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{{currentBadPayload}}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login with Wrong Credentials",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('response status code should have 401 value', () => {\r",
+									"    pm.response.to.have.status(401);\r",
+									"}); \r",
+									"    \r",
+									"pm.test('response Content-Type header should have application/json value', () => {\r",
+									"    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json');\r",
+									"}); \r",
+									"    \r",
+									"pm.test('response body should an object', () => {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson).to.be.an('object');\r",
+									"});\r",
+									"    \r",
+									"pm.test('response body should have correct property and value', () => {\r",
+									"    const responseJson = pm.response.json();\r",
+									"\r",
+									"    pm.expect(responseJson).to.ownProperty('status');\r",
+									"    pm.expect(responseJson.status).to.equals('fail');\r",
+									"    \r",
+									"    pm.expect(responseJson).to.ownProperty('status_code');\r",
+									"    pm.expect(responseJson.status_code).to.equals(401);\r",
+									"    \r",
+									"    pm.expect(responseJson).to.ownProperty('message');\r",
+									"    pm.expect(responseJson.message).to.be.an('string');\r",
+									"    pm.expect(responseJson.message).to.equals('Unauthorized');\r",
+									"});\r",
+									"    \r",
+									"const repeatRequestUntilDatasetEmpty = () => {\r",
+									"    const badPayloads = pm.environment.get('badPayloads');\r",
+									"    \r",
+									"    if(badPayloads && badPayloads.length > 0) {\r",
+									"        postman.setNextRequest('Login with Wrong Credentials');\r",
+									"    }\r",
+									"}\r",
+									"    \r",
+									"repeatRequestUntilDatasetEmpty();"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const email = pm.environment.get('testerEmail');\r",
+									"const password = pm.environment.get('testerPassword');\r",
+									"let badPayloads = pm.environment.get('badPayloads');\r",
+									"    \r",
+									"if (!badPayloads || badPayloads.length === 0) {\r",
+									"    badPayloads = [\r",
+									"        { email: 'unknown@email.com', password },\r",
+									"        { email: 'unknown@email.com', password: 'unknownpassword' },\r",
+									"        { email, password: 'wrongpassword' },\r",
+									"    ]\r",
+									"}\r",
+									"    \r",
+									"const currentBadPayload = badPayloads.shift();\r",
+									"pm.environment.set('currentBadPayload', JSON.stringify(currentBadPayload));\r",
+									"pm.environment.set('badPayloads', badPayloads);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{{currentBadPayload}}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('response status code should have 200 value', () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"}); \r",
+									"    \r",
+									"pm.test('response Content-Type header should have application/json value', () => {\r",
+									"    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json');\r",
+									"}); \r",
+									"    \r",
+									"pm.test('response body should an object', () => {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson).to.be.an('object');\r",
+									"});\r",
+									"    \r",
+									"pm.test('response body should have correct property and value', () => {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseJson).to.ownProperty('status');\r",
+									"    pm.expect(responseJson.status).to.equals('success');\r",
+									"\r",
+									"    pm.expect(responseJson).to.ownProperty('status_code');\r",
+									"    pm.expect(responseJson.status_code).to.equals(200);\r",
+									"\r",
+									"    pm.expect(responseJson).to.ownProperty('message');\r",
+									"    pm.expect(responseJson.message).to.equals('Logout successful');\r",
+									"\r",
+									"    pm.expect(responseJson).to.ownProperty('data');\r",
+									"    pm.expect(responseJson.data).to.equals(null);\r",
+									"});\r",
+									"\r",
+									"// Reset `accessToken` env value after logout\r",
+									"pm.environment.set('accessToken', '');\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/logout",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[No Test] Login Again",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseJson = pm.response.json();\r",
+									"\r",
+									"// Save the `accessToken` in environment variable\r",
+									"pm.environment.set('accessToken', responseJson.data.access_token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"{{testerEmail}}\",\r\n    \"password\": \"{{testerPassword}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Albums",
+			"item": [
+				{
+					"name": "CRUD",
+					"item": [
+						{
+							"name": "Add New Album",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('response status code should have 201 value', () => {\r",
+											"   pm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"pm.test('response Content-Type header should have application/json value', () => {\r",
+											"    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json');\r",
+											"});\r",
+											"\r",
+											"pm.test('response body should an object', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.be.an('object');\r",
+											"}); \r",
+											"\r",
+											"pm.test('response body should have the correct property and value', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status');\r",
+											"    pm.expect(responseJson.status).to.equals('success');\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status_code');\r",
+											"    pm.expect(responseJson.status_code).to.equals(201);\r",
+											"    \r",
+											"    pm.expect(responseJson).to.ownProperty('message');\r",
+											"    pm.expect(responseJson.message).to.equals('Created');\r",
+											"    \r",
+											"    pm.expect(responseJson).to.ownProperty('data');\r",
+											"    pm.expect(responseJson.data).to.be.an('object');\r",
+											"});\r",
+											"\r",
+											"pm.test('response data should have the correct property and value', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"\r",
+											"    pm.expect(responseJson.data).to.ownProperty('id');\r",
+											"    pm.expect(responseJson.data.id).to.be.a('number');\r",
+											"    pm.expect(responseJson.data.id).to.not.equals(null);\r",
+											"\r",
+											"    pm.expect(responseJson.data).to.ownProperty('name');\r",
+											"    pm.expect(responseJson.data.name).to.be.a('string');\r",
+											"    pm.expect(responseJson.data.name).to.equals(pm.environment.get('albumName'));\r",
+											"\r",
+											"    pm.expect(responseJson.data).to.ownProperty('year');\r",
+											"    pm.expect(responseJson.data.year).to.be.a('number');\r",
+											"    pm.expect(responseJson.data.year).to.equals(parseInt(pm.environment.get('albumYear')));\r",
+											"\r",
+											"    // Set `albumId` variable\r",
+											"    pm.environment.set('albumId', responseJson.data.id);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"{{albumName}}\",\r\n    \"year\": {{albumYear}}\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/albums",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"albums"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add New Album without Token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('response status code should have 401 value', () => {\r",
+											"   pm.response.to.have.status(401);\r",
+											"});\r",
+											"\r",
+											"pm.test('response Content-Type header should have application/json value', () => {\r",
+											"    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json');\r",
+											"});\r",
+											"\r",
+											"pm.test('response body should an object', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.be.an('object');\r",
+											"}); \r",
+											"\r",
+											"pm.test('response body should have the correct property and value', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status');\r",
+											"    pm.expect(responseJson.status).to.equals('fail');\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status_code');\r",
+											"    pm.expect(responseJson.status_code).to.equals(401);\r",
+											"    \r",
+											"    pm.expect(responseJson).to.ownProperty('message');\r",
+											"    pm.expect(responseJson.message).to.equals('Unauthorized');\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"{{albumName}}\",\r\n    \"year\": {{albumYear}}\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/albums",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"albums"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add New Album using Bad Payloads",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('response status code should have 400 value', () => {\r",
+											"   pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test('response Content-Type header should have application/json value', () => {\r",
+											"    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json');\r",
+											"});\r",
+											"\r",
+											"pm.test('response body should an object', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.be.an('object');\r",
+											"}); \r",
+											"\r",
+											"pm.test('response body should have the correct property and value', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status');\r",
+											"    pm.expect(responseJson.status).to.equals('fail');\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status_code');\r",
+											"    pm.expect(responseJson.status_code).to.equals(400);\r",
+											"    \r",
+											"    pm.expect(responseJson).to.ownProperty('message');\r",
+											"    pm.expect(responseJson.message).to.be.an('array');\r",
+											"    pm.expect(responseJson.message[0]).to.be.a('string');\r",
+											"});\r",
+											"\r",
+											"const repeatRequestUntilDatasetEmpty = () => {\r",
+											"    const badPayloads = pm.environment.get('badPayloads');\r",
+											"    \r",
+											"    if (badPayloads && badPayloads.length > 0) {\r",
+											"        postman.setNextRequest('Add New Album using Bad Payloads');\r",
+											"    }\r",
+											"}\r",
+											"    \r",
+											"repeatRequestUntilDatasetEmpty();\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const albumName = pm.environment.get('albumName');\r",
+											"const albumYear = parseInt(pm.environment.get('albumYear'));\r",
+											"let badPayloads = pm.environment.get('badPayloads');\r",
+											"    \r",
+											"if (!badPayloads || badPayloads.length === 0) {\r",
+											"    badPayloads = [\r",
+											"        {name: albumName},\r",
+											"        {year: albumYear},\r",
+											"        {name: null, year: albumYear},\r",
+											"        {name: '', year: albumYear},\r",
+											"        {name: 0, year: albumYear},\r",
+											"        {name: albumName, year: null},\r",
+											"        {name: albumName, year: ''},\r",
+											"        {name: albumName, year: '20xx'},\r",
+											"        {name: albumName, year: 0},\r",
+											"    ]\r",
+											"}\r",
+											"    \r",
+											"const currentBadPayload = badPayloads.shift();\r",
+											"pm.environment.set('currentBadPayload', JSON.stringify(currentBadPayload));\r",
+											"pm.environment.set('badPayloads', badPayloads);\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{{currentBadPayload}}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/albums",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"albums"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get All Albums",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('response status code should have 200 value', () => {\r",
+											"   pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test('response Content-Type header should have application/json value', () => {\r",
+											"    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json');\r",
+											"});\r",
+											"\r",
+											"pm.test('response body should an object', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.be.an('object');\r",
+											"}); \r",
+											"\r",
+											"pm.test('response body should have the correct property and value', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status');\r",
+											"    pm.expect(responseJson.status).to.equals('success');\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status_code');\r",
+											"    pm.expect(responseJson.status_code).to.equals(200);\r",
+											"    \r",
+											"    pm.expect(responseJson).to.ownProperty('message');\r",
+											"    pm.expect(responseJson.message).to.equals('OK');\r",
+											"    \r",
+											"    pm.expect(responseJson).to.ownProperty('data');\r",
+											"    pm.expect(responseJson.data).to.be.an('array');\r",
+											"});\r",
+											"\r",
+											"pm.test('response body data should contain at least 1 item', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    const { data } = responseJson;\r",
+											"    \r",
+											"    pm.expect(data).to.be.an('array');\r",
+											"    pm.expect(data).lengthOf.at.least(1);\r",
+											"});\r",
+											"\r",
+											"pm.test('response data item should have the correct property and value', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    const firstAlbum = responseJson.data[0];\r",
+											"\r",
+											"    pm.expect(firstAlbum).to.ownProperty('id');\r",
+											"    pm.expect(firstAlbum.id).to.be.a('number');\r",
+											"    pm.expect(firstAlbum.id).to.not.equals(null);\r",
+											"\r",
+											"    pm.expect(firstAlbum).to.ownProperty('name');\r",
+											"    pm.expect(firstAlbum.name).to.be.a('string');\r",
+											"    pm.expect(firstAlbum.name).to.not.equals('');\r",
+											"    pm.expect(firstAlbum.name).to.not.equals(null);\r",
+											"\r",
+											"    pm.expect(firstAlbum).to.ownProperty('year');\r",
+											"    pm.expect(firstAlbum.year).to.be.a('number');\r",
+											"    pm.expect(firstAlbum.year).to.not.equals(null);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/albums",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"albums"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get All Albums without Token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('response status code should have 401 value', () => {\r",
+											"   pm.response.to.have.status(401);\r",
+											"});\r",
+											"\r",
+											"pm.test('response Content-Type header should have application/json value', () => {\r",
+											"    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json');\r",
+											"});\r",
+											"\r",
+											"pm.test('response body should an object', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.be.an('object');\r",
+											"}); \r",
+											"\r",
+											"pm.test('response body should have the correct property and value', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status');\r",
+											"    pm.expect(responseJson.status).to.equals('fail');\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status_code');\r",
+											"    pm.expect(responseJson.status_code).to.equals(401);\r",
+											"    \r",
+											"    pm.expect(responseJson).to.ownProperty('message');\r",
+											"    pm.expect(responseJson.message).to.equals('Unauthorized');\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/albums",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"albums"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Specific Album By Id",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('response status code should have 200 value', () => {\r",
+											"   pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test('response Content-Type header should have application/json value', () => {\r",
+											"    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json');\r",
+											"});\r",
+											"\r",
+											"pm.test('response body should an object', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.be.an('object');\r",
+											"}); \r",
+											"\r",
+											"pm.test('response body should have the correct property and value', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status');\r",
+											"    pm.expect(responseJson.status).to.equals('success');\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status_code');\r",
+											"    pm.expect(responseJson.status_code).to.equals(200);\r",
+											"    \r",
+											"    pm.expect(responseJson).to.ownProperty('message');\r",
+											"    pm.expect(responseJson.message).to.equals('OK');\r",
+											"    \r",
+											"    pm.expect(responseJson).to.ownProperty('data');\r",
+											"    pm.expect(responseJson.data).to.be.an('object');\r",
+											"});\r",
+											"\r",
+											"pm.test('response data should have the correct property and value', () => {\r",
+											"    const { data } = pm.response.json();\r",
+											"\r",
+											"    pm.expect(data).to.ownProperty('id');\r",
+											"    pm.expect(data.id).to.be.a('number');\r",
+											"    pm.expect(data.id).to.equals(parseInt(pm.environment.get('albumId')));\r",
+											"\r",
+											"    pm.expect(data).to.ownProperty('name');\r",
+											"    pm.expect(data.name).to.be.a('string');\r",
+											"    pm.expect(data.name).to.equals(pm.environment.get('albumName'));\r",
+											"    \r",
+											"    pm.expect(data).to.ownProperty('year');\r",
+											"    pm.expect(data.year).to.be.a('number');\r",
+											"    pm.expect(data.year).to.equals(parseInt(pm.environment.get('albumYear')));\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/albums/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"albums",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "{{albumId}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Specific Album By Id without Token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('response status code should have 401 value', () => {\r",
+											"   pm.response.to.have.status(401);\r",
+											"});\r",
+											"\r",
+											"pm.test('response Content-Type header should have application/json value', () => {\r",
+											"    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json');\r",
+											"});\r",
+											"\r",
+											"pm.test('response body should an object', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.be.an('object');\r",
+											"}); \r",
+											"\r",
+											"pm.test('response body should have the correct property and value', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status');\r",
+											"    pm.expect(responseJson.status).to.equals('fail');\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status_code');\r",
+											"    pm.expect(responseJson.status_code).to.equals(401);\r",
+											"    \r",
+											"    pm.expect(responseJson).to.ownProperty('message');\r",
+											"    pm.expect(responseJson.message).to.equals('Unauthorized');\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/albums/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"albums",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "{{albumId}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Specific Album with Unknown Ids",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('response status code should have 404 value', () => {\r",
+											"    pm.response.to.have.status(404);\r",
+											"}); \r",
+											"    \r",
+											"pm.test('response Content-Type header should have application/json value', () => {\r",
+											"    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json');\r",
+											"}); \r",
+											"    \r",
+											"pm.test('response body should an object', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.be.an('object');\r",
+											"});\r",
+											"    \r",
+											"pm.test('response body should have correct property and value', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status');\r",
+											"    pm.expect(responseJson.status).to.equals('fail');\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status_code');\r",
+											"    pm.expect(responseJson.status_code).to.equals(404);\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('message');\r",
+											"    pm.expect(responseJson.message).to.be.a('string');\r",
+											"    pm.expect(responseJson.message).to.equals('Not found');\r",
+											"});\r",
+											"\r",
+											"const repeatRequestUntilDatasetEmpty = () => {\r",
+											"    const badPayloads = pm.environment.get('badPayloads');\r",
+											"    \r",
+											"    if(badPayloads && badPayloads.length > 0) {\r",
+											"        postman.setNextRequest('Get Specific Album with Unknown Ids');\r",
+											"    }\r",
+											"}\r",
+											"    \r",
+											"repeatRequestUntilDatasetEmpty();\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"let badPayloads = pm.environment.get('badPayloads');\r",
+											"    \r",
+											"if (!badPayloads || badPayloads.length === 0) {\r",
+											"    badPayloads = [\r",
+											"        null,\r",
+											"        'unknownId',\r",
+											"        -1\r",
+											"    ]\r",
+											"}\r",
+											"    \r",
+											"const currentBadPayload = badPayloads.shift();\r",
+											"pm.environment.set('currentBadPayload', JSON.stringify(currentBadPayload));\r",
+											"pm.environment.set('badPayloads', badPayloads);\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/albums/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"albums",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": null
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit Album",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('response status code should have 200 value', () => {\r",
+											"   pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test('response Content-Type header should have application/json value', () => {\r",
+											"    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json');\r",
+											"});\r",
+											"\r",
+											"pm.test('response body should an object', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.be.an('object');\r",
+											"}); \r",
+											"\r",
+											"pm.test('response body should have the correct property and value', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status');\r",
+											"    pm.expect(responseJson.status).to.equals('success');\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status_code');\r",
+											"    pm.expect(responseJson.status_code).to.equals(200);\r",
+											"    \r",
+											"    pm.expect(responseJson).to.ownProperty('message');\r",
+											"    pm.expect(responseJson.message).to.equals('Updated');\r",
+											"    \r",
+											"    pm.expect(responseJson).to.ownProperty('data');\r",
+											"    pm.expect(responseJson.data).to.be.an('object');\r",
+											"});\r",
+											"\r",
+											"pm.test('response data should have the correct property and value', () => {\r",
+											"    const { data } = pm.response.json();\r",
+											"\r",
+											"    pm.expect(data).to.ownProperty('id');\r",
+											"    pm.expect(data.id).to.be.a('number');\r",
+											"    pm.expect(data.id).to.equals(parseInt(pm.environment.get('albumId')));\r",
+											"\r",
+											"    pm.expect(data).to.ownProperty('name');\r",
+											"    pm.expect(data.name).to.be.a('string');\r",
+											"    pm.expect(data.name).to.equals(pm.environment.get('albumName'));\r",
+											"    \r",
+											"    pm.expect(data).to.ownProperty('year');\r",
+											"    pm.expect(data.year).to.be.a('number');\r",
+											"    pm.expect(data.year).to.equals(parseInt(pm.environment.get('albumYear')));\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.environment.set('albumName', 'Edited V - Maroon 5');\r",
+											"pm.environment.set('albumYear', '2015');"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"{{albumName}}\",\r\n    \"year\": \"{{albumYear}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/albums/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"albums",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "{{albumId}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit Album without Token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('response status code should have 401 value', () => {\r",
+											"   pm.response.to.have.status(401);\r",
+											"});\r",
+											"\r",
+											"pm.test('response Content-Type header should have application/json value', () => {\r",
+											"    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json');\r",
+											"});\r",
+											"\r",
+											"pm.test('response body should an object', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.be.an('object');\r",
+											"}); \r",
+											"\r",
+											"pm.test('response body should have the correct property and value', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status');\r",
+											"    pm.expect(responseJson.status).to.equals('fail');\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status_code');\r",
+											"    pm.expect(responseJson.status_code).to.equals(401);\r",
+											"    \r",
+											"    pm.expect(responseJson).to.ownProperty('message');\r",
+											"    pm.expect(responseJson.message).to.equals('Unauthorized');\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"// \r",
+											"\r",
+											"// Set edited value\r",
+											"pm.environment.set('albumName', 'Edited V - Maroon 5');\r",
+											"pm.environment.set('albumYear', '2015');\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"{{albumName}}\",\r\n    \"year\": \"{{albumYear}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/albums/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"albums",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "{{albumId}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit Album with Unknown Ids",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('response status code should have 404 value', () => {\r",
+											"    pm.response.to.have.status(404);\r",
+											"}); \r",
+											"    \r",
+											"pm.test('response Content-Type header should have application/json value', () => {\r",
+											"    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json');\r",
+											"}); \r",
+											"    \r",
+											"pm.test('response body should an object', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.be.an('object');\r",
+											"});\r",
+											"    \r",
+											"pm.test('response body should have correct property and value', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status');\r",
+											"    pm.expect(responseJson.status).to.equals('fail');\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status_code');\r",
+											"    pm.expect(responseJson.status_code).to.equals(404);\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('message');\r",
+											"    pm.expect(responseJson.message).to.be.a('string');\r",
+											"    pm.expect(responseJson.message).to.equals('Not found');\r",
+											"});\r",
+											"\r",
+											"const repeatRequestUntilDatasetEmpty = () => {\r",
+											"    const badPayloads = pm.environment.get('badPayloads');\r",
+											"    \r",
+											"    if(badPayloads && badPayloads.length > 0) {\r",
+											"        postman.setNextRequest('Edit Album with Unknown Ids');\r",
+											"    }\r",
+											"}\r",
+											"    \r",
+											"repeatRequestUntilDatasetEmpty();\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"let badPayloads = pm.environment.get('badPayloads');\r",
+											"    \r",
+											"if (!badPayloads || badPayloads.length === 0) {\r",
+											"    badPayloads = [\r",
+											"        null,\r",
+											"        'unknownId',\r",
+											"        -1\r",
+											"    ]\r",
+											"}\r",
+											"    \r",
+											"const currentBadPayload = badPayloads.shift();\r",
+											"pm.environment.set('currentBadPayload', JSON.stringify(currentBadPayload));\r",
+											"pm.environment.set('badPayloads', badPayloads);\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/albums/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"albums",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "{{currentBadPayload}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit Album using Bad Payloads",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('response status code should have 400 value', () => {\r",
+											"   pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test('response Content-Type header should have application/json value', () => {\r",
+											"    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json');\r",
+											"});\r",
+											"\r",
+											"pm.test('response body should an object', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.be.an('object');\r",
+											"}); \r",
+											"\r",
+											"pm.test('response body should have the correct property and value', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status');\r",
+											"    pm.expect(responseJson.status).to.equals('fail');\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status_code');\r",
+											"    pm.expect(responseJson.status_code).to.equals(400);\r",
+											"    \r",
+											"    pm.expect(responseJson).to.ownProperty('message');\r",
+											"    pm.expect(responseJson.message).to.be.an('array');\r",
+											"    pm.expect(responseJson.message[0]).to.be.a('string');\r",
+											"});\r",
+											"\r",
+											"const repeatRequestUntilDatasetEmpty = () => {\r",
+											"    const badPayloads = pm.environment.get('badPayloads');\r",
+											"    \r",
+											"    if(badPayloads && badPayloads.length > 0) {\r",
+											"        postman.setNextRequest('Edit Album using Bad Payloads');\r",
+											"    }\r",
+											"}\r",
+											"    \r",
+											"repeatRequestUntilDatasetEmpty();\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const albumName = pm.environment.get('albumName');\r",
+											"const albumYear = parseInt(pm.environment.get('albumYear'));\r",
+											"let badPayloads = pm.environment.get('badPayloads');\r",
+											"    \r",
+											"if (!badPayloads || badPayloads.length === 0) {\r",
+											"    badPayloads = [\r",
+											"        {name: ''},\r",
+											"        {year: ''},\r",
+											"        {name: null, year: albumYear},\r",
+											"        {name: '', year: albumYear},\r",
+											"        {name: 0, year: albumYear},\r",
+											"        {name: albumName, year: null},\r",
+											"        {name: albumName, year: ''},\r",
+											"        {name: albumName, year: '20xx'},\r",
+											"        {name: albumName, year: 0},\r",
+											"    ]\r",
+											"}\r",
+											"    \r",
+											"const currentBadPayload = badPayloads.shift();\r",
+											"pm.environment.set('currentBadPayload', JSON.stringify(currentBadPayload));\r",
+											"pm.environment.set('badPayloads', badPayloads);\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{{currentBadPayload}}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/albums/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"albums",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "{{albumId}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Album without Token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('response status code should have 401 value', () => {\r",
+											"   pm.response.to.have.status(401);\r",
+											"});\r",
+											"\r",
+											"pm.test('response Content-Type header should have application/json value', () => {\r",
+											"    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json');\r",
+											"});\r",
+											"\r",
+											"pm.test('response body should an object', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.be.an('object');\r",
+											"}); \r",
+											"\r",
+											"pm.test('response body should have the correct property and value', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status');\r",
+											"    pm.expect(responseJson.status).to.equals('fail');\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status_code');\r",
+											"    pm.expect(responseJson.status_code).to.equals(401);\r",
+											"    \r",
+											"    pm.expect(responseJson).to.ownProperty('message');\r",
+											"    pm.expect(responseJson.message).to.equals('Unauthorized');\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/albums/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"albums",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "{{albumId}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Album with Unknown Ids",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('response status code should have 404 value', () => {\r",
+											"    pm.response.to.have.status(404);\r",
+											"}); \r",
+											"    \r",
+											"pm.test('response Content-Type header should have application/json value', () => {\r",
+											"    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json');\r",
+											"}); \r",
+											"    \r",
+											"pm.test('response body should an object', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.be.an('object');\r",
+											"});\r",
+											"    \r",
+											"pm.test('response body should have correct property and value', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status');\r",
+											"    pm.expect(responseJson.status).to.equals('fail');\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status_code');\r",
+											"    pm.expect(responseJson.status_code).to.equals(404);\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('message');\r",
+											"    pm.expect(responseJson.message).to.be.a('string');\r",
+											"    pm.expect(responseJson.message).to.equals('Not found');\r",
+											"});\r",
+											"\r",
+											"const repeatRequestUntilDatasetEmpty = () => {\r",
+											"    const badPayloads = pm.environment.get('badPayloads');\r",
+											"    \r",
+											"    if(badPayloads && badPayloads.length > 0) {\r",
+											"        postman.setNextRequest('Delete Album with Unknown Ids');\r",
+											"    }\r",
+											"}\r",
+											"    \r",
+											"repeatRequestUntilDatasetEmpty();\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"let badPayloads = pm.environment.get('badPayloads');\r",
+											"    \r",
+											"if (!badPayloads || badPayloads.length === 0) {\r",
+											"    badPayloads = [\r",
+											"        null,\r",
+											"        'unknownId',\r",
+											"        -1\r",
+											"    ]\r",
+											"}\r",
+											"    \r",
+											"const currentBadPayload = badPayloads.shift();\r",
+											"pm.environment.set('currentBadPayload', JSON.stringify(currentBadPayload));\r",
+											"pm.environment.set('badPayloads', badPayloads);\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/albums/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"albums",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "{{currentBadPayload}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Album",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('response status code should have 200 value', () => {\r",
+											"   pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test('response Content-Type header should have application/json value', () => {\r",
+											"    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json');\r",
+											"});\r",
+											"\r",
+											"pm.test('response body should an object', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.be.an('object');\r",
+											"}); \r",
+											"\r",
+											"pm.test('response body should have the correct property and value', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status');\r",
+											"    pm.expect(responseJson.status).to.equals('success');\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status_code');\r",
+											"    pm.expect(responseJson.status_code).to.equals(200);\r",
+											"    \r",
+											"    pm.expect(responseJson).to.ownProperty('message');\r",
+											"    pm.expect(responseJson.message).to.equals('Deleted');\r",
+											"    \r",
+											"    pm.expect(responseJson).to.ownProperty('data');\r",
+											"    pm.expect(responseJson.data).to.equals(null);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/albums/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"albums",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "{{albumId}}"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Search",
+					"item": [
+						{
+							"name": "[No Test] Prerequisite",
+							"item": [
+								{
+									"name": "Add Album 1",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const responseJson = pm.response.json();\r",
+													"\r",
+													"// Save the albumId to `payloads` variable\r",
+													"const albumIds = pm.environment.get('payloads') || [];\r",
+													"albumIds.push(responseJson.data.id);\r",
+													"pm.environment.set('payloads', albumIds);\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\": \"Album 1\",\r\n    \"year\": 2020\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/albums",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"albums"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Add Album 2",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const responseJson = pm.response.json();\r",
+													"\r",
+													"// Save the albumId to `payloads` variable\r",
+													"const albumIds = pm.environment.get('payloads') || [];\r",
+													"albumIds.push(responseJson.data.id);\r",
+													"pm.environment.set('payloads', albumIds);\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\": \"Album 2\",\r\n    \"year\": 2021\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/albums",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"albums"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Add Album 3",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const responseJson = pm.response.json();\r",
+													"\r",
+													"// Save the albumId to `payloads` variable\r",
+													"const albumIds = pm.environment.get('payloads') || [];\r",
+													"albumIds.push(responseJson.data.id);\r",
+													"pm.environment.set('payloads', albumIds);\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\": \"V by Maroon 5\",\r\n    \"year\": 2015\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/albums",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"albums"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Search Album By Name",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('response status code should have 200 value', () => {\r",
+											"   pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test('response Content-Type header should have application/json value', () => {\r",
+											"    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json');\r",
+											"});\r",
+											"\r",
+											"pm.test('response body should an object', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.be.an('object');\r",
+											"}); \r",
+											"\r",
+											"pm.test('response body should have the correct property and value', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status');\r",
+											"    pm.expect(responseJson.status).to.equals('success');\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status_code');\r",
+											"    pm.expect(responseJson.status_code).to.equals(200);\r",
+											"    \r",
+											"    pm.expect(responseJson).to.ownProperty('message');\r",
+											"    pm.expect(responseJson.message).to.equals('OK');\r",
+											"    \r",
+											"    pm.expect(responseJson).to.ownProperty('data');\r",
+											"    pm.expect(responseJson.data).to.be.an('array');\r",
+											"});\r",
+											"\r",
+											"pm.test('response body data should contain 2 item', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    const { data } = responseJson;\r",
+											"    \r",
+											"    pm.expect(data).to.be.an('array');\r",
+											"    pm.expect(data.length).to.equals(2);\r",
+											"});\r",
+											"\r",
+											"pm.test('response data item should have the correct property and value', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    const firstAlbum = responseJson.data[0];\r",
+											"\r",
+											"    pm.expect(firstAlbum).to.ownProperty('id');\r",
+											"    pm.expect(firstAlbum.id).to.be.a('number');\r",
+											"    pm.expect(firstAlbum.id).to.not.equals(null);\r",
+											"\r",
+											"    pm.expect(firstAlbum).to.ownProperty('name');\r",
+											"    pm.expect(firstAlbum.name).to.be.a('string');\r",
+											"    pm.expect(firstAlbum.name).to.not.equals('');\r",
+											"    pm.expect(firstAlbum.name).to.not.equals(null);\r",
+											"\r",
+											"    pm.expect(firstAlbum).to.ownProperty('year');\r",
+											"    pm.expect(firstAlbum.year).to.be.a('number');\r",
+											"    pm.expect(firstAlbum.year).to.not.equals(null);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/albums?name=album",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"albums"
+									],
+									"query": [
+										{
+											"key": "name",
+											"value": "album"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Search Album By Name without Token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('response status code should have 401 value', () => {\r",
+											"   pm.response.to.have.status(401);\r",
+											"});\r",
+											"\r",
+											"pm.test('response Content-Type header should have application/json value', () => {\r",
+											"    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json');\r",
+											"});\r",
+											"\r",
+											"pm.test('response body should an object', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.be.an('object');\r",
+											"}); \r",
+											"\r",
+											"pm.test('response body should have the correct property and value', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status');\r",
+											"    pm.expect(responseJson.status).to.equals('fail');\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status_code');\r",
+											"    pm.expect(responseJson.status_code).to.equals(401);\r",
+											"    \r",
+											"    pm.expect(responseJson).to.ownProperty('message');\r",
+											"    pm.expect(responseJson.message).to.equals('Unauthorized');\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/albums?name=album",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"albums"
+									],
+									"query": [
+										{
+											"key": "name",
+											"value": "album"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Search Album By Unknown Name",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('response status code should have 200 value', () => {\r",
+											"   pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test('response Content-Type header should have application/json value', () => {\r",
+											"    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json');\r",
+											"});\r",
+											"\r",
+											"pm.test('response body should an object', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.be.an('object');\r",
+											"}); \r",
+											"\r",
+											"pm.test('response body should have the correct property and value', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status');\r",
+											"    pm.expect(responseJson.status).to.equals('success');\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status_code');\r",
+											"    pm.expect(responseJson.status_code).to.equals(200);\r",
+											"    \r",
+											"    pm.expect(responseJson).to.ownProperty('message');\r",
+											"    pm.expect(responseJson.message).to.equals('OK');\r",
+											"    \r",
+											"    pm.expect(responseJson).to.ownProperty('data');\r",
+											"    pm.expect(responseJson.data).to.be.an('array');\r",
+											"});\r",
+											"\r",
+											"pm.test('response body data should contain 0 item', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    const { data } = responseJson;\r",
+											"    \r",
+											"    pm.expect(data).to.be.an('array');\r",
+											"    pm.expect(data.length).to.equals(0);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/albums?name=unknown",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"albums"
+									],
+									"query": [
+										{
+											"key": "name",
+											"value": "unknown"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[No Test] Delete Album After Search",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"let payloads = pm.environment.get('payloads');\r",
+											"    \r",
+											"const currentPayload = payloads.shift();\r",
+											"pm.environment.set('currentPayload', JSON.stringify(currentPayload));\r",
+											"pm.environment.set('payloads', payloads);\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const repeatRequestUntilDatasetEmpty = () => {\r",
+											"    const payloads = pm.environment.get('payloads');\r",
+											"    \r",
+											"    if(payloads && payloads.length > 0) {\r",
+											"        postman.setNextRequest('[No Test] Delete Album After Search');\r",
+											"    }\r",
+											"}\r",
+											"    \r",
+											"repeatRequestUntilDatasetEmpty();"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{baseUrl}}/albums/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"albums",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "{{currentPayload}}"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{accessToken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Songs",
+			"item": [
+				{
+					"name": "CRUD",
+					"item": [
+						{
+							"name": "[No Test] Prerequisite - Add New Album",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const responseJson = pm.response.json();\r",
+											"\r",
+											"// Set `albumId` variable\r",
+											"pm.environment.set('albumId', responseJson.data.id);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"{{albumName}}\",\r\n    \"year\": {{albumYear}}\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/albums",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"albums"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add New Song",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('response status code should have 201 value', () => {\r",
+											"   pm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"pm.test('response Content-Type header should have application/json value', () => {\r",
+											"    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json');\r",
+											"});\r",
+											"\r",
+											"pm.test('response body should an object', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.be.an('object');\r",
+											"}); \r",
+											"\r",
+											"pm.test('response body should have the correct property and value', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status');\r",
+											"    pm.expect(responseJson.status).to.equals('success');\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status_code');\r",
+											"    pm.expect(responseJson.status_code).to.equals(201);\r",
+											"    \r",
+											"    pm.expect(responseJson).to.ownProperty('message');\r",
+											"    pm.expect(responseJson.message).to.equals('Created');\r",
+											"    \r",
+											"    pm.expect(responseJson).to.ownProperty('data');\r",
+											"    pm.expect(responseJson.data).to.be.an('object');\r",
+											"});\r",
+											"\r",
+											"pm.test('response data should have the correct property and value', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"\r",
+											"    pm.expect(responseJson.data).to.ownProperty('id');\r",
+											"    pm.expect(responseJson.data.id).to.be.a('number');\r",
+											"    pm.expect(responseJson.data.id).to.not.equals(null);\r",
+											"\r",
+											"    pm.expect(responseJson.data).to.ownProperty('title');\r",
+											"    pm.expect(responseJson.data.title).to.be.a('string');\r",
+											"    pm.expect(responseJson.data.title).to.equals(pm.environment.get('songTitle'));\r",
+											"\r",
+											"    pm.expect(responseJson.data).to.ownProperty('year');\r",
+											"    pm.expect(responseJson.data.year).to.be.a('number');\r",
+											"    pm.expect(responseJson.data.year).to.equals(parseInt(pm.environment.get('songYear')));\r",
+											"\r",
+											"    pm.expect(responseJson.data).to.ownProperty('genre');\r",
+											"    pm.expect(responseJson.data.genre).to.be.a('string');\r",
+											"    pm.expect(responseJson.data.genre).to.equals(pm.environment.get('songGenre'));\r",
+											"\r",
+											"    pm.expect(responseJson.data).to.ownProperty('artist');\r",
+											"    pm.expect(responseJson.data.artist).to.be.a('string');\r",
+											"    pm.expect(responseJson.data.artist).to.equals(pm.environment.get('songArtist'));\r",
+											"\r",
+											"    pm.expect(responseJson.data).to.ownProperty('duration');\r",
+											"    pm.expect(responseJson.data.duration).to.be.a('number');\r",
+											"    pm.expect(responseJson.data.duration).to.equals(parseInt(pm.environment.get('songDuration')));\r",
+											"\r",
+											"    pm.expect(responseJson.data).to.ownProperty('album_id');\r",
+											"    pm.expect(responseJson.data.album_id).to.be.a('number');\r",
+											"    pm.expect(responseJson.data.album_id).to.equals(parseInt(pm.environment.get('albumId')));\r",
+											"\r",
+											"    // Set `songId` variable\r",
+											"    pm.environment.set('songId', responseJson.data.id);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"title\": \"{{songTitle}}\",\r\n    \"year\": \"{{songYear}}\",\r\n    \"genre\": \"{{songGenre}}\",\r\n    \"artist\": \"{{songArtist}}\",\r\n    \"duration\": {{songDuration}},\r\n    \"album_id\": {{albumId}}\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/songs",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"songs"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add New Song without Token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('response status code should have 401 value', () => {\r",
+											"   pm.response.to.have.status(401);\r",
+											"});\r",
+											"\r",
+											"pm.test('response Content-Type header should have application/json value', () => {\r",
+											"    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json');\r",
+											"});\r",
+											"\r",
+											"pm.test('response body should an object', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.be.an('object');\r",
+											"}); \r",
+											"\r",
+											"pm.test('response body should have the correct property and value', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status');\r",
+											"    pm.expect(responseJson.status).to.equals('fail');\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status_code');\r",
+											"    pm.expect(responseJson.status_code).to.equals(401);\r",
+											"    \r",
+											"    pm.expect(responseJson).to.ownProperty('message');\r",
+											"    pm.expect(responseJson.message).to.equals('Unauthorized');\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"title\": \"{{songTitle}}\",\r\n    \"year\": \"{{songYear}}\",\r\n    \"genre\": \"{{songGenre}}\",\r\n    \"artist\": \"{{songArtist}}\",\r\n    \"duration\": {{songDuration}},\r\n    \"album_id\": {{albumId}}\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/songs",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"songs"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add New Song using Bad Payloads",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('response status code should have 400 value', () => {\r",
+											"   pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test('response Content-Type header should have application/json value', () => {\r",
+											"    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json');\r",
+											"});\r",
+											"\r",
+											"pm.test('response body should an object', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.be.an('object');\r",
+											"}); \r",
+											"\r",
+											"pm.test('response body should have the correct property and value', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status');\r",
+											"    pm.expect(responseJson.status).to.equals('fail');\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status_code');\r",
+											"    pm.expect(responseJson.status_code).to.equals(400);\r",
+											"    \r",
+											"    pm.expect(responseJson).to.ownProperty('message');\r",
+											"    pm.expect(responseJson.message).to.be.an('array');\r",
+											"    pm.expect(responseJson.message[0]).to.be.a('string');\r",
+											"});\r",
+											"\r",
+											"const repeatRequestUntilDatasetEmpty = () => {\r",
+											"    const badPayloads = pm.environment.get('badPayloads');\r",
+											"    \r",
+											"    if(badPayloads && badPayloads.length > 0) {\r",
+											"        postman.setNextRequest('Add New Song using Bad Payloads');\r",
+											"    }\r",
+											"}\r",
+											"    \r",
+											"repeatRequestUntilDatasetEmpty();\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const songTitle = pm.environment.get('songTitle');\r",
+											"const songYear = parseInt(pm.environment.get('songYear'));\r",
+											"const songGenre = parseInt(pm.environment.get('songGenre'));\r",
+											"const songArtist = parseInt(pm.environment.get('songArtist'));\r",
+											"let badPayloads = pm.environment.get('badPayloads');\r",
+											"    \r",
+											"if (!badPayloads || badPayloads.length === 0) {\r",
+											"    badPayloads = [\r",
+											"        {year: songYear, genre: songGenre, artist: songArtist},\r",
+											"        {title: songTitle, genre: songGenre, artist: songArtist},\r",
+											"        {title: songTitle, year: songYear, artist: songArtist},\r",
+											"        {title: songTitle, year: songYear, genre: songGenre},\r",
+											"        {title: 0, year: songYear, genre: songGenre, artist: songArtist},\r",
+											"        {title: 0, year: 9, genre: 0, artist: 0},\r",
+											"    ]\r",
+											"}\r",
+											"    \r",
+											"const currentBadPayload = badPayloads.shift();\r",
+											"pm.environment.set('currentBadPayload', JSON.stringify(currentBadPayload));\r",
+											"pm.environment.set('badPayloads', badPayloads);\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{{currentBadPayload}}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/songs",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"songs"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get All Songs",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('response status code should have 200 value', () => {\r",
+											"   pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test('response Content-Type header should have application/json value', () => {\r",
+											"    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json');\r",
+											"});\r",
+											"\r",
+											"pm.test('response body should an object', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.be.an('object');\r",
+											"}); \r",
+											"\r",
+											"pm.test('response body should have the correct property and value', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status');\r",
+											"    pm.expect(responseJson.status).to.equals('success');\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status_code');\r",
+											"    pm.expect(responseJson.status_code).to.equals(200);\r",
+											"    \r",
+											"    pm.expect(responseJson).to.ownProperty('message');\r",
+											"    pm.expect(responseJson.message).to.equals('OK');\r",
+											"    \r",
+											"    pm.expect(responseJson).to.ownProperty('data');\r",
+											"    pm.expect(responseJson.data).to.be.an('array');\r",
+											"});\r",
+											"\r",
+											"pm.test('response body data should contain at least 1 item', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    const { data } = responseJson;\r",
+											"    \r",
+											"    pm.expect(data).to.be.an('array');\r",
+											"    pm.expect(data).lengthOf.at.least(1);\r",
+											"});\r",
+											"\r",
+											"pm.test('response data item should have the correct property and value', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    const firstSong = responseJson.data[0];\r",
+											"\r",
+											"    pm.expect(firstSong).to.ownProperty('id');\r",
+											"    pm.expect(firstSong.id).to.be.a('number');\r",
+											"    pm.expect(firstSong.id).to.not.equals(null);\r",
+											"\r",
+											"    pm.expect(firstSong).to.ownProperty('title');\r",
+											"    pm.expect(firstSong.title).to.be.a('string');\r",
+											"    pm.expect(firstSong.title).to.not.equals(null);\r",
+											"    pm.expect(firstSong.title).to.not.equals('');\r",
+											"\r",
+											"    pm.expect(firstSong).to.ownProperty('year');\r",
+											"    pm.expect(firstSong.year).to.be.a('number');\r",
+											"    pm.expect(firstSong.year).to.not.equals(null);\r",
+											"\r",
+											"    pm.expect(firstSong).to.ownProperty('genre');\r",
+											"    pm.expect(firstSong.genre).to.be.a('string');\r",
+											"    pm.expect(firstSong.genre).to.not.equals(null);\r",
+											"    pm.expect(firstSong.genre).to.not.equals('');\r",
+											"\r",
+											"    pm.expect(firstSong).to.ownProperty('artist');\r",
+											"    pm.expect(firstSong.artist).to.be.a('string');\r",
+											"    pm.expect(firstSong.artist).to.not.equals(null);\r",
+											"    pm.expect(firstSong.artist).to.not.equals('');\r",
+											"\r",
+											"    pm.expect(firstSong).to.ownProperty('duration');\r",
+											"    pm.expect(firstSong.duration).to.be.a('number');\r",
+											"    pm.expect(firstSong.duration).to.not.equals(null);\r",
+											"\r",
+											"    pm.expect(firstSong).to.ownProperty('album_id');\r",
+											"    pm.expect(firstSong.album_id).to.be.a('number');\r",
+											"    pm.expect(firstSong.album_id).to.not.equals(null);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/songs",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"songs"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get All Songs without Token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('response status code should have 401 value', () => {\r",
+											"   pm.response.to.have.status(401);\r",
+											"});\r",
+											"\r",
+											"pm.test('response Content-Type header should have application/json value', () => {\r",
+											"    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json');\r",
+											"});\r",
+											"\r",
+											"pm.test('response body should an object', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.be.an('object');\r",
+											"}); \r",
+											"\r",
+											"pm.test('response body should have the correct property and value', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status');\r",
+											"    pm.expect(responseJson.status).to.equals('fail');\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status_code');\r",
+											"    pm.expect(responseJson.status_code).to.equals(401);\r",
+											"    \r",
+											"    pm.expect(responseJson).to.ownProperty('message');\r",
+											"    pm.expect(responseJson.message).to.equals('Unauthorized');\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/songs",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"songs"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Specific Song By Id",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('response status code should have 200 value', () => {\r",
+											"   pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test('response Content-Type header should have application/json value', () => {\r",
+											"    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json');\r",
+											"});\r",
+											"\r",
+											"pm.test('response body should an object', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.be.an('object');\r",
+											"}); \r",
+											"\r",
+											"pm.test('response body should have the correct property and value', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status');\r",
+											"    pm.expect(responseJson.status).to.equals('success');\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status_code');\r",
+											"    pm.expect(responseJson.status_code).to.equals(200);\r",
+											"    \r",
+											"    pm.expect(responseJson).to.ownProperty('message');\r",
+											"    pm.expect(responseJson.message).to.equals('OK');\r",
+											"    \r",
+											"    pm.expect(responseJson).to.ownProperty('data');\r",
+											"    pm.expect(responseJson.data).to.be.an('object');\r",
+											"});\r",
+											"\r",
+											"pm.test('response data should have the correct property and value', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    \r",
+											"    pm.expect(responseJson.data).to.ownProperty('id');\r",
+											"    pm.expect(responseJson.data.id).to.be.a('number');\r",
+											"    pm.expect(responseJson.data.id).to.not.equals(null);\r",
+											"\r",
+											"    pm.expect(responseJson.data).to.ownProperty('title');\r",
+											"    pm.expect(responseJson.data.title).to.be.a('string');\r",
+											"    pm.expect(responseJson.data.title).to.equals(pm.environment.get('songTitle'));\r",
+											"\r",
+											"    pm.expect(responseJson.data).to.ownProperty('year');\r",
+											"    pm.expect(responseJson.data.year).to.be.a('number');\r",
+											"    pm.expect(responseJson.data.year).to.equals(parseInt(pm.environment.get('songYear')));\r",
+											"\r",
+											"    pm.expect(responseJson.data).to.ownProperty('genre');\r",
+											"    pm.expect(responseJson.data.genre).to.be.a('string');\r",
+											"    pm.expect(responseJson.data.genre).to.equals(pm.environment.get('songGenre'));\r",
+											"\r",
+											"    pm.expect(responseJson.data).to.ownProperty('artist');\r",
+											"    pm.expect(responseJson.data.artist).to.be.a('string');\r",
+											"    pm.expect(responseJson.data.artist).to.equals(pm.environment.get('songArtist'));\r",
+											"\r",
+											"    pm.expect(responseJson.data).to.ownProperty('duration');\r",
+											"    pm.expect(responseJson.data.duration).to.be.a('number');\r",
+											"    pm.expect(responseJson.data.duration).to.equals(parseInt(pm.environment.get('songDuration')));\r",
+											"\r",
+											"    pm.expect(responseJson.data).to.ownProperty('album_id');\r",
+											"    pm.expect(responseJson.data.album_id).to.be.a('number');\r",
+											"    pm.expect(responseJson.data.album_id).to.equals(parseInt(pm.environment.get('albumId')));\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/songs/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"songs",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "{{songId}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Specific Song By Id without Token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('response status code should have 401 value', () => {\r",
+											"   pm.response.to.have.status(401);\r",
+											"});\r",
+											"\r",
+											"pm.test('response Content-Type header should have application/json value', () => {\r",
+											"    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json');\r",
+											"});\r",
+											"\r",
+											"pm.test('response body should an object', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.be.an('object');\r",
+											"}); \r",
+											"\r",
+											"pm.test('response body should have the correct property and value', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status');\r",
+											"    pm.expect(responseJson.status).to.equals('fail');\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status_code');\r",
+											"    pm.expect(responseJson.status_code).to.equals(401);\r",
+											"    \r",
+											"    pm.expect(responseJson).to.ownProperty('message');\r",
+											"    pm.expect(responseJson.message).to.equals('Unauthorized');\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/songs/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"songs",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "{{songId}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Specific Song with Unknown Ids",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('response status code should have 404 value', () => {\r",
+											"    pm.response.to.have.status(404);\r",
+											"}); \r",
+											"    \r",
+											"pm.test('response Content-Type header should have application/json value', () => {\r",
+											"    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json');\r",
+											"}); \r",
+											"    \r",
+											"pm.test('response body should an object', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.be.an('object');\r",
+											"});\r",
+											"    \r",
+											"pm.test('response body should have correct property and value', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status');\r",
+											"    pm.expect(responseJson.status).to.equals('fail');\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status_code');\r",
+											"    pm.expect(responseJson.status_code).to.equals(404);\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('message');\r",
+											"    pm.expect(responseJson.message).to.be.a('string');\r",
+											"    pm.expect(responseJson.message).to.equals('Not found');\r",
+											"});\r",
+											"\r",
+											"const repeatRequestUntilDatasetEmpty = () => {\r",
+											"    const badPayloads = pm.environment.get('badPayloads');\r",
+											"    \r",
+											"    if(badPayloads && badPayloads.length > 0) {\r",
+											"        postman.setNextRequest('Get Specific Song with Unknown Ids');\r",
+											"    }\r",
+											"}\r",
+											"    \r",
+											"repeatRequestUntilDatasetEmpty();\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"let badPayloads = pm.environment.get('badPayloads');\r",
+											"    \r",
+											"if (!badPayloads || badPayloads.length === 0) {\r",
+											"    badPayloads = [\r",
+											"        null,\r",
+											"        'unknownId',\r",
+											"        -1\r",
+											"    ]\r",
+											"}\r",
+											"    \r",
+											"const currentBadPayload = badPayloads.shift();\r",
+											"pm.environment.set('currentBadPayload', JSON.stringify(currentBadPayload));\r",
+											"pm.environment.set('badPayloads', badPayloads);\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/songs/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"songs",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "{{currentBadPayload}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit Song",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('response status code should have 200 value', () => {\r",
+											"   pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test('response Content-Type header should have application/json value', () => {\r",
+											"    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json');\r",
+											"});\r",
+											"\r",
+											"pm.test('response body should an object', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.be.an('object');\r",
+											"}); \r",
+											"\r",
+											"pm.test('response body should have the correct property and value', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status');\r",
+											"    pm.expect(responseJson.status).to.equals('success');\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status_code');\r",
+											"    pm.expect(responseJson.status_code).to.equals(200);\r",
+											"    \r",
+											"    pm.expect(responseJson).to.ownProperty('message');\r",
+											"    pm.expect(responseJson.message).to.equals('Updated');\r",
+											"    \r",
+											"    pm.expect(responseJson).to.ownProperty('data');\r",
+											"    pm.expect(responseJson.data).to.be.an('object');\r",
+											"});\r",
+											"\r",
+											"pm.test('response data should have the correct property and value', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"\r",
+											"    pm.expect(responseJson.data).to.ownProperty('id');\r",
+											"    pm.expect(responseJson.data.id).to.be.a('number');\r",
+											"    pm.expect(responseJson.data.id).to.not.equals(null);\r",
+											"\r",
+											"    pm.expect(responseJson.data).to.ownProperty('title');\r",
+											"    pm.expect(responseJson.data.title).to.be.a('string');\r",
+											"    pm.expect(responseJson.data.title).to.not.equals(null);\r",
+											"    pm.expect(responseJson.data.title).to.not.equals('');\r",
+											"\r",
+											"    pm.expect(responseJson.data).to.ownProperty('year');\r",
+											"    pm.expect(responseJson.data.year).to.be.a('number');\r",
+											"    pm.expect(responseJson.data.year).to.not.equals(null);\r",
+											"    pm.expect(responseJson.data.year.toString().length).to.equals(4);\r",
+											"\r",
+											"    pm.expect(responseJson.data).to.ownProperty('genre');\r",
+											"    pm.expect(responseJson.data.genre).to.be.a('string');\r",
+											"    pm.expect(responseJson.data.genre).to.not.equals(null);\r",
+											"    pm.expect(responseJson.data.genre).to.not.equals('');\r",
+											"\r",
+											"    pm.expect(responseJson.data).to.ownProperty('artist');\r",
+											"    pm.expect(responseJson.data.artist).to.be.a('string');\r",
+											"    pm.expect(responseJson.data.artist).to.not.equals(null);\r",
+											"    pm.expect(responseJson.data.artist).to.not.equals('');\r",
+											"\r",
+											"    pm.expect(responseJson.data).to.ownProperty('duration');\r",
+											"    pm.expect(responseJson.data.duration).to.be.a('number');\r",
+											"    pm.expect(responseJson.data.duration).to.not.equals(null);\r",
+											"    pm.expect(responseJson.data.duration).to.at.least(0);\r",
+											"\r",
+											"    pm.expect(responseJson.data).to.ownProperty('album_id');\r",
+											"    pm.expect(responseJson.data.album_id).to.be.a('number');\r",
+											"    pm.expect(responseJson.data.album_id).to.equals(parseInt(pm.environment.get('albumId')));\r",
+											"});\r",
+											"\r",
+											"const repeatRequestUntilDatasetEmpty = () => {\r",
+											"    const payloads = pm.environment.get('payloads');\r",
+											"    \r",
+											"    if(payloads && payloads.length > 0) {\r",
+											"        postman.setNextRequest('Edit Song');\r",
+											"    }\r",
+											"}\r",
+											"    \r",
+											"repeatRequestUntilDatasetEmpty();\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.environment.set('songTitle', 'Edited Sugar');\r",
+											"pm.environment.set('songYear', '2016');\r",
+											"pm.environment.set('songArtist', 'Maroon V');\r",
+											"pm.environment.set('songGenre', 'Indie');\r",
+											"pm.environment.set('songDuration', '236');\r",
+											"\r",
+											"let payloads = pm.environment.get('payloads');\r",
+											"    \r",
+											"if (!payloads || payloads.length === 0) {\r",
+											"    payloads = [\r",
+											"        {title: pm.environment.get('songTitle')},\r",
+											"        {year: pm.environment.get('songYear')},\r",
+											"        {artist: pm.environment.get('songArtist')},\r",
+											"        {genre: pm.environment.get('songGenre')},\r",
+											"        {duration: pm.environment.get('songDuration')},\r",
+											"    ]\r",
+											"}\r",
+											"    \r",
+											"const currentPayload = payloads.shift();\r",
+											"pm.environment.set('currentPayload', JSON.stringify(currentPayload));\r",
+											"pm.environment.set('payloads', payloads);\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{{currentPayload}}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/songs/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"songs",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "{{songId}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit Song without Token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('response status code should have 401 value', () => {\r",
+											"   pm.response.to.have.status(401);\r",
+											"});\r",
+											"\r",
+											"pm.test('response Content-Type header should have application/json value', () => {\r",
+											"    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json');\r",
+											"});\r",
+											"\r",
+											"pm.test('response body should an object', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.be.an('object');\r",
+											"}); \r",
+											"\r",
+											"pm.test('response body should have the correct property and value', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status');\r",
+											"    pm.expect(responseJson.status).to.equals('fail');\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status_code');\r",
+											"    pm.expect(responseJson.status_code).to.equals(401);\r",
+											"    \r",
+											"    pm.expect(responseJson).to.ownProperty('message');\r",
+											"    pm.expect(responseJson.message).to.equals('Unauthorized');\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.environment.set('songTitle', 'Edited Sugar');\r",
+											"pm.environment.set('songYear', '2016');\r",
+											"pm.environment.set('songArtist', 'Maroon V');\r",
+											"pm.environment.set('songGenre', 'Indie');\r",
+											"pm.environment.set('songDuration', '236');\r",
+											"\r",
+											"let payloads = pm.environment.get('payloads');\r",
+											"    \r",
+											"if (!payloads || payloads.length === 0) {\r",
+											"    payloads = [\r",
+											"        {title: pm.environment.get('songTitle')},\r",
+											"        {year: pm.environment.get('songYear')},\r",
+											"        {artist: pm.environment.get('songArtist')},\r",
+											"        {genre: pm.environment.get('songGenre')},\r",
+											"        {duration: pm.environment.get('songDuration')},\r",
+											"    ]\r",
+											"}\r",
+											"    \r",
+											"const currentPayload = payloads.shift();\r",
+											"pm.environment.set('currentPayload', JSON.stringify(currentPayload));\r",
+											"pm.environment.set('payloads', payloads);\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{{currentPayload}}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/songs/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"songs",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "{{songId}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit Song with Unknown Ids",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('response status code should have 404 value', () => {\r",
+											"    pm.response.to.have.status(404);\r",
+											"}); \r",
+											"    \r",
+											"pm.test('response Content-Type header should have application/json value', () => {\r",
+											"    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json');\r",
+											"}); \r",
+											"    \r",
+											"pm.test('response body should an object', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.be.an('object');\r",
+											"});\r",
+											"    \r",
+											"pm.test('response body should have correct property and value', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status');\r",
+											"    pm.expect(responseJson.status).to.equals('fail');\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status_code');\r",
+											"    pm.expect(responseJson.status_code).to.equals(404);\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('message');\r",
+											"    pm.expect(responseJson.message).to.be.a('string');\r",
+											"    pm.expect(responseJson.message).to.equals('Not found');\r",
+											"});\r",
+											"\r",
+											"const repeatRequestUntilDatasetEmpty = () => {\r",
+											"    const badPayloads = pm.environment.get('badPayloads');\r",
+											"    \r",
+											"    if(badPayloads && badPayloads.length > 0) {\r",
+											"        postman.setNextRequest('Edit Song with Unknown Ids');\r",
+											"    }\r",
+											"}\r",
+											"    \r",
+											"repeatRequestUntilDatasetEmpty();\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"let badPayloads = pm.environment.get('badPayloads');\r",
+											"    \r",
+											"if (!badPayloads || badPayloads.length === 0) {\r",
+											"    badPayloads = [\r",
+											"        null,\r",
+											"        'unknownId',\r",
+											"        -1\r",
+											"    ]\r",
+											"}\r",
+											"    \r",
+											"const currentBadPayload = badPayloads.shift();\r",
+											"pm.environment.set('currentBadPayload', JSON.stringify(currentBadPayload));\r",
+											"pm.environment.set('badPayloads', badPayloads);\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/songs/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"songs",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "{{currentBadPayload}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit Song using Bad Payloads",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('response status code should have 400 value', () => {\r",
+											"   pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test('response Content-Type header should have application/json value', () => {\r",
+											"    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json');\r",
+											"});\r",
+											"\r",
+											"pm.test('response body should an object', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.be.an('object');\r",
+											"}); \r",
+											"\r",
+											"pm.test('response body should have the correct property and value', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status');\r",
+											"    pm.expect(responseJson.status).to.equals('fail');\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status_code');\r",
+											"    pm.expect(responseJson.status_code).to.equals(400);\r",
+											"    \r",
+											"    pm.expect(responseJson).to.ownProperty('message');\r",
+											"    pm.expect(responseJson.message).to.be.an('array');\r",
+											"    pm.expect(responseJson.message[0]).to.be.a('string');\r",
+											"});\r",
+											"\r",
+											"const repeatRequestUntilDatasetEmpty = () => {\r",
+											"    const badPayloads = pm.environment.get('badPayloads');\r",
+											"    \r",
+											"    if(badPayloads && badPayloads.length > 0) {\r",
+											"        postman.setNextRequest('Edit Song using Bad Payloads');\r",
+											"    }\r",
+											"}\r",
+											"    \r",
+											"repeatRequestUntilDatasetEmpty();\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"let badPayloads = pm.environment.get('badPayloads');\r",
+											"    \r",
+											"if (!badPayloads || badPayloads.length === 0) {\r",
+											"    badPayloads = [\r",
+											"        {title: '', genre: '', artist: ''},\r",
+											"        {title: null, genre: null, artist: null},\r",
+											"        {year: '', duration: '', album_id: ''},\r",
+											"        {year: -1, duration: -1, album_id: -1},\r",
+											"        {year: 1.2, duration: 1.2, album_id: 1.2},\r",
+											"    ]\r",
+											"}\r",
+											"    \r",
+											"const currentBadPayload = badPayloads.shift();\r",
+											"pm.environment.set('currentBadPayload', JSON.stringify(currentBadPayload));\r",
+											"pm.environment.set('badPayloads', badPayloads);\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{{currentBadPayload}}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/songs/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"songs",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "{{songId}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Song without Token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('response status code should have 401 value', () => {\r",
+											"   pm.response.to.have.status(401);\r",
+											"});\r",
+											"\r",
+											"pm.test('response Content-Type header should have application/json value', () => {\r",
+											"    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json');\r",
+											"});\r",
+											"\r",
+											"pm.test('response body should an object', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.be.an('object');\r",
+											"}); \r",
+											"\r",
+											"pm.test('response body should have the correct property and value', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status');\r",
+											"    pm.expect(responseJson.status).to.equals('fail');\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status_code');\r",
+											"    pm.expect(responseJson.status_code).to.equals(401);\r",
+											"    \r",
+											"    pm.expect(responseJson).to.ownProperty('message');\r",
+											"    pm.expect(responseJson.message).to.equals('Unauthorized');\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/songs/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"songs",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "{{songId}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Song with Unknown Ids",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('response status code should have 404 value', () => {\r",
+											"    pm.response.to.have.status(404);\r",
+											"}); \r",
+											"    \r",
+											"pm.test('response Content-Type header should have application/json value', () => {\r",
+											"    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json');\r",
+											"}); \r",
+											"    \r",
+											"pm.test('response body should an object', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.be.an('object');\r",
+											"});\r",
+											"    \r",
+											"pm.test('response body should have correct property and value', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status');\r",
+											"    pm.expect(responseJson.status).to.equals('fail');\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status_code');\r",
+											"    pm.expect(responseJson.status_code).to.equals(404);\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('message');\r",
+											"    pm.expect(responseJson.message).to.be.a('string');\r",
+											"    pm.expect(responseJson.message).to.equals('Not found');\r",
+											"});\r",
+											"\r",
+											"const repeatRequestUntilDatasetEmpty = () => {\r",
+											"    const badPayloads = pm.environment.get('badPayloads');\r",
+											"    \r",
+											"    if(badPayloads && badPayloads.length > 0) {\r",
+											"        postman.setNextRequest('Delete Song with Unknown Ids');\r",
+											"    }\r",
+											"}\r",
+											"    \r",
+											"repeatRequestUntilDatasetEmpty();\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"let badPayloads = pm.environment.get('badPayloads');\r",
+											"    \r",
+											"if (!badPayloads || badPayloads.length === 0) {\r",
+											"    badPayloads = [\r",
+											"        null,\r",
+											"        'unknownId',\r",
+											"        -1\r",
+											"    ]\r",
+											"}\r",
+											"    \r",
+											"const currentBadPayload = badPayloads.shift();\r",
+											"pm.environment.set('currentBadPayload', JSON.stringify(currentBadPayload));\r",
+											"pm.environment.set('badPayloads', badPayloads);\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/songs/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"songs",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "{{currentBadPayload}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Song",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('response status code should have 200 value', () => {\r",
+											"   pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test('response Content-Type header should have application/json value', () => {\r",
+											"    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json');\r",
+											"});\r",
+											"\r",
+											"pm.test('response body should an object', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.be.an('object');\r",
+											"}); \r",
+											"\r",
+											"pm.test('response body should have the correct property and value', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status');\r",
+											"    pm.expect(responseJson.status).to.equals('success');\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status_code');\r",
+											"    pm.expect(responseJson.status_code).to.equals(200);\r",
+											"    \r",
+											"    pm.expect(responseJson).to.ownProperty('message');\r",
+											"    pm.expect(responseJson.message).to.equals('Deleted');\r",
+											"    \r",
+											"    pm.expect(responseJson).to.ownProperty('data');\r",
+											"    pm.expect(responseJson.data).to.equals(null);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/songs/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"songs",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "{{songId}}"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Search",
+					"item": [
+						{
+							"name": "[No Test] Prerequisite",
+							"item": [
+								{
+									"name": "Add Song 1",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const responseJson = pm.response.json();\r",
+													"\r",
+													"// Save the songId to `payloads` variable\r",
+													"const songIds = pm.environment.get('payloads') || [];\r",
+													"songIds.push(responseJson.data.id);\r",
+													"pm.environment.set('payloads', songIds);\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"pm.environment.unset('payloads');"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"title\": \"Song 1\",\r\n    \"year\": \"{{songYear}}\",\r\n    \"genre\": \"{{songGenre}}\",\r\n    \"artist\": \"{{songArtist}}\",\r\n    \"duration\": {{songDuration}},\r\n    \"album_id\": {{albumId}}\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/songs",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"songs"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Add Song 2",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const responseJson = pm.response.json();\r",
+													"\r",
+													"// Save the songId to `payloads` variable\r",
+													"const songIds = pm.environment.get('payloads') || [];\r",
+													"songIds.push(responseJson.data.id);\r",
+													"pm.environment.set('payloads', songIds);\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"title\": \"Song 2\",\r\n    \"year\": \"{{songYear}}\",\r\n    \"genre\": \"{{songGenre}}\",\r\n    \"artist\": \"{{songArtist}}\",\r\n    \"duration\": {{songDuration}},\r\n    \"album_id\": {{albumId}}\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/songs",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"songs"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Add Song 3",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const responseJson = pm.response.json();\r",
+													"\r",
+													"// Save the songId to `payloads` variable\r",
+													"const songIds = pm.environment.get('payloads') || [];\r",
+													"songIds.push(responseJson.data.id);\r",
+													"pm.environment.set('payloads', songIds);\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"title\": \"{{songTitle}}\",\r\n    \"year\": \"{{songYear}}\",\r\n    \"genre\": \"{{songGenre}}\",\r\n    \"artist\": \"{{songArtist}}\",\r\n    \"duration\": {{songDuration}},\r\n    \"album_id\": {{albumId}}\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/songs",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"songs"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Search Song By Title",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('response status code should have 200 value', () => {\r",
+											"   pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test('response Content-Type header should have application/json value', () => {\r",
+											"    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json');\r",
+											"});\r",
+											"\r",
+											"pm.test('response body should an object', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.be.an('object');\r",
+											"}); \r",
+											"\r",
+											"pm.test('response body should have the correct property and value', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status');\r",
+											"    pm.expect(responseJson.status).to.equals('success');\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status_code');\r",
+											"    pm.expect(responseJson.status_code).to.equals(200);\r",
+											"    \r",
+											"    pm.expect(responseJson).to.ownProperty('message');\r",
+											"    pm.expect(responseJson.message).to.equals('OK');\r",
+											"    \r",
+											"    pm.expect(responseJson).to.ownProperty('data');\r",
+											"    pm.expect(responseJson.data).to.be.an('array');\r",
+											"});\r",
+											"\r",
+											"pm.test('response body data should contain 2 item', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    const { data } = responseJson;\r",
+											"    \r",
+											"    pm.expect(data).to.be.an('array');\r",
+											"    pm.expect(data.length).to.equals(2);\r",
+											"});\r",
+											"\r",
+											"pm.test('response data item should have the correct property and value', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    const firstSong = responseJson.data[0];\r",
+											"\r",
+											"    pm.expect(firstSong).to.ownProperty('id');\r",
+											"    pm.expect(firstSong.id).to.be.a('number');\r",
+											"    pm.expect(firstSong.id).to.not.equals(null);\r",
+											"\r",
+											"    pm.expect(firstSong).to.ownProperty('title');\r",
+											"    pm.expect(firstSong.title).to.be.a('string');\r",
+											"    pm.expect(firstSong.title).to.not.equals(null);\r",
+											"    pm.expect(firstSong.title).to.not.equals('');\r",
+											"\r",
+											"    pm.expect(firstSong).to.ownProperty('year');\r",
+											"    pm.expect(firstSong.year).to.be.a('number');\r",
+											"    pm.expect(firstSong.year).to.not.equals(null);\r",
+											"\r",
+											"    pm.expect(firstSong).to.ownProperty('genre');\r",
+											"    pm.expect(firstSong.genre).to.be.a('string');\r",
+											"    pm.expect(firstSong.genre).to.not.equals(null);\r",
+											"    pm.expect(firstSong.genre).to.not.equals('');\r",
+											"\r",
+											"    pm.expect(firstSong).to.ownProperty('artist');\r",
+											"    pm.expect(firstSong.artist).to.be.a('string');\r",
+											"    pm.expect(firstSong.artist).to.not.equals(null);\r",
+											"    pm.expect(firstSong.artist).to.not.equals('');\r",
+											"\r",
+											"    pm.expect(firstSong).to.ownProperty('duration');\r",
+											"    pm.expect(firstSong.duration).to.be.a('number');\r",
+											"    pm.expect(firstSong.duration).to.not.equals(null);\r",
+											"\r",
+											"    pm.expect(firstSong).to.ownProperty('album_id');\r",
+											"    pm.expect(firstSong.album_id).to.be.a('number');\r",
+											"    pm.expect(firstSong.album_id).to.not.equals(null);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/songs?title=song",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"songs"
+									],
+									"query": [
+										{
+											"key": "title",
+											"value": "song"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Search Song By Title without Token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('response status code should have 401 value', () => {\r",
+											"   pm.response.to.have.status(401);\r",
+											"});\r",
+											"\r",
+											"pm.test('response Content-Type header should have application/json value', () => {\r",
+											"    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json');\r",
+											"});\r",
+											"\r",
+											"pm.test('response body should an object', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.be.an('object');\r",
+											"}); \r",
+											"\r",
+											"pm.test('response body should have the correct property and value', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status');\r",
+											"    pm.expect(responseJson.status).to.equals('fail');\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status_code');\r",
+											"    pm.expect(responseJson.status_code).to.equals(401);\r",
+											"    \r",
+											"    pm.expect(responseJson).to.ownProperty('message');\r",
+											"    pm.expect(responseJson.message).to.equals('Unauthorized');\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/songs?title=song",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"songs"
+									],
+									"query": [
+										{
+											"key": "title",
+											"value": "song"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Search Song By Unknown Title",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('response status code should have 200 value', () => {\r",
+											"   pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test('response Content-Type header should have application/json value', () => {\r",
+											"    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json');\r",
+											"});\r",
+											"\r",
+											"pm.test('response body should an object', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.be.an('object');\r",
+											"}); \r",
+											"\r",
+											"pm.test('response body should have the correct property and value', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status');\r",
+											"    pm.expect(responseJson.status).to.equals('success');\r",
+											"\r",
+											"    pm.expect(responseJson).to.ownProperty('status_code');\r",
+											"    pm.expect(responseJson.status_code).to.equals(200);\r",
+											"    \r",
+											"    pm.expect(responseJson).to.ownProperty('message');\r",
+											"    pm.expect(responseJson.message).to.equals('OK');\r",
+											"    \r",
+											"    pm.expect(responseJson).to.ownProperty('data');\r",
+											"    pm.expect(responseJson.data).to.be.an('array');\r",
+											"});\r",
+											"\r",
+											"pm.test('response body data should contain 0 item', () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    const { data } = responseJson;\r",
+											"    \r",
+											"    pm.expect(data).to.be.an('array');\r",
+											"    pm.expect(data.length).to.equals(0);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/songs?title=unknown",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"songs"
+									],
+									"query": [
+										{
+											"key": "title",
+											"value": "unknown"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[No Test] Delete Song After Search",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"let payloads = pm.environment.get('payloads');\r",
+											"    \r",
+											"const currentPayload = payloads.shift();\r",
+											"pm.environment.set('currentPayload', JSON.stringify(currentPayload));\r",
+											"pm.environment.set('payloads', payloads);\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const repeatRequestUntilDatasetEmpty = () => {\r",
+											"    const payloads = pm.environment.get('payloads');\r",
+											"    \r",
+											"    if(payloads && payloads.length > 0) {\r",
+											"        postman.setNextRequest('[No Test] Delete Song After Search');\r",
+											"    }\r",
+											"}\r",
+											"    \r",
+											"repeatRequestUntilDatasetEmpty();"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{baseUrl}}/songs/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"songs",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "{{currentPayload}}"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{accessToken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
