@@ -98,9 +98,9 @@ The other tables are the auto-generated tables by Laravel. They are used for aut
 - [Laravel Mix](https://laravel.com/docs/8.x/mix) v6.0.6
 - [Bootstrap](https://getbootstrap.com/) v5.2.1
 
-## Testing
+# Testing
 
-### Postman
+## Postman
 
 You can import the Postman collection from the `postman` directory to test the API.
 
