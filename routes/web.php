@@ -31,7 +31,7 @@ Route::get('/logout', [AuthController::class, 'logout'])
     ->name('logout');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])
-    ->name('dashboard');
+    ->name('dashboard')->middleware('auth');
 
 Route::resource('albums', 'App\Http\Controllers\Web\AlbumController')
     ->middleware(['auth']);
