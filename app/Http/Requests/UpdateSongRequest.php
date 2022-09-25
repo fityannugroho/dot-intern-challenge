@@ -25,7 +25,7 @@ class UpdateSongRequest extends FormRequest
     {
         return [
             'title' => 'string|max:100',
-            'year' => 'required|integer|digits:4|min:1901|max:' . date('Y'),
+            'year' => 'integer|digits:4|min:1901|max:' . date('Y'),
             'genre' => 'string|max:50',
             'artist' => 'string|max:100',
             'duration' => 'integer|min:0',
